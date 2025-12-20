@@ -1,9 +1,91 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from '@/components/Footer';
-import { BarChart3, ExternalLink, TrendingUp, PieChart, Activity } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { BarChart3, TrendingUp, PieChart, Activity, Droplets, Thermometer, Leaf, MapPin } from 'lucide-react';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer, 
+  PieChart as RechartsPie, 
+  Pie, 
+  Cell, 
+  LineChart, 
+  Line, 
+  Legend,
+  AreaChart,
+  Area,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar
+} from 'recharts';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+// Data aggregated from the dataset
+const cropYieldData = [
+  { crop: 'Wheat', avgYield: 2580, color: '#22c55e' },
+  { crop: 'Rice', avgYield: 2420, color: '#3b82f6' },
+  { crop: 'Maize', avgYield: 2180, color: '#f59e0b' },
+  { crop: 'Cotton', avgYield: 2450, color: '#ec4899' },
+  { crop: 'Sugarcane', avgYield: 2680, color: '#8b5cf6' },
+  { crop: 'Pulses', avgYield: 2520, color: '#06b6d4' },
+  { crop: 'Millets', avgYield: 2380, color: '#84cc16' },
+];
+
+const stateDistribution = [
+  { name: 'Maharashtra', value: 18, color: '#22c55e' },
+  { name: 'Karnataka', value: 16, color: '#3b82f6' },
+  { name: 'West Bengal', value: 14, color: '#f59e0b' },
+  { name: 'Punjab', value: 12, color: '#ec4899' },
+  { name: 'Gujarat', value: 12, color: '#8b5cf6' },
+  { name: 'Rajasthan', value: 10, color: '#06b6d4' },
+  { name: 'Tamil Nadu', value: 10, color: '#84cc16' },
+  { name: 'Uttar Pradesh', value: 8, color: '#f97316' },
+];
+
+const marketTrendsData = [
+  { year: '2020', Cotton: 5150, Pulses: 5580, Wheat: 1920, Rice: 1780 },
+  { year: '2021', Cotton: 5280, Pulses: 5720, Wheat: 1980, Rice: 1820 },
+  { year: '2022', Cotton: 5180, Pulses: 5640, Wheat: 2040, Rice: 1860 },
+  { year: '2023', Cotton: 5220, Pulses: 5580, Wheat: 2000, Rice: 1840 },
+  { year: '2024', Cotton: 5320, Pulses: 5680, Wheat: 2060, Rice: 1880 },
+];
+
+const soilTypeData = [
+  { type: 'Black', avgYield: 2650 },
+  { type: 'Alluvial', avgYield: 2780 },
+  { type: 'Red', avgYield: 2320 },
+  { type: 'Laterite', avgYield: 2480 },
+  { type: 'Saline', avgYield: 2180 },
+  { type: 'Peaty', avgYield: 2520 },
+  { type: 'Arid', avgYield: 2380 },
+];
+
+const irrigationData = [
+  { name: 'Drip', value: 28 },
+  { name: 'Sprinkler', value: 25 },
+  { name: 'Canal', value: 22 },
+  { name: 'None', value: 25 },
+];
+
+const climateImpactData = [
+  { parameter: 'Temperature', optimal: 28, current: 26 },
+  { parameter: 'Humidity', optimal: 70, current: 65 },
+  { parameter: 'Rainfall', optimal: 80, current: 75 },
+  { parameter: 'pH Level', optimal: 85, current: 78 },
+  { parameter: 'Nitrogen', optimal: 75, current: 70 },
+  { parameter: 'Organic Carbon', optimal: 65, current: 58 },
+];
+
+const COLORS = ['#22c55e', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'];
 
 const Analytics: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('powerbi');
+
   return (
     <main className="min-h-screen bg-background pt-20">
       {/* Header */}
@@ -11,13 +93,13 @@ const Analytics: React.FC = () => {
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur-sm rounded-full px-4 py-2 mb-4">
             <BarChart3 className="w-4 h-4 text-secondary" />
-            <span className="text-sm font-medium text-primary-foreground">Power BI Integration</span>
+            <span className="text-sm font-medium text-primary-foreground">Analytics Dashboard</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
             Agricultural Analytics Dashboard
           </h1>
           <p className="text-primary-foreground/80 max-w-2xl mx-auto">
-            Visualize crop trends, market rates, and yield patterns with interactive Power BI dashboards.
+            Visualize crop trends, market rates, and yield patterns with interactive Power BI and custom data visualizations.
           </p>
         </div>
       </section>
@@ -41,108 +123,225 @@ const Analytics: React.FC = () => {
             ))}
           </div>
 
-          {/* Power BI Embed Placeholder */}
-          <div className="bg-card rounded-2xl shadow-card border border-border overflow-hidden">
-            <div className="p-6 border-b border-border flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-foreground">Crop Analysis Dashboard</h2>
-                <p className="text-sm text-muted-foreground">Interactive visualizations powered by Power BI</p>
-              </div>
-              <Button variant="outline" size="sm" className="gap-2">
-                <ExternalLink className="w-4 h-4" />
-                Open Full View
-              </Button>
-            </div>
+          {/* Tabs for switching views */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+              <TabsTrigger value="powerbi">Power BI Dashboard</TabsTrigger>
+              <TabsTrigger value="charts">Data Visualizations</TabsTrigger>
+            </TabsList>
 
-            {/* Embed Area */}
-            <div className="aspect-video bg-muted flex items-center justify-center relative overflow-hidden">
-              {/* Placeholder visualization */}
-              <div className="absolute inset-0 p-8 flex flex-col items-center justify-center">
-                <div className="w-full max-w-4xl">
-                  {/* Mock Chart */}
-                  <div className="grid grid-cols-4 gap-4 mb-8">
-                    {[65, 45, 80, 55, 70, 40, 85, 60].map((height, i) => (
-                      <div key={i} className="flex flex-col items-center">
-                        <div
-                          className="w-full rounded-t-lg gradient-hero transition-all duration-500"
-                          style={{ height: `${height * 2}px` }}
-                        />
-                        <span className="text-xs text-muted-foreground mt-2">
-                          {['Wheat', 'Rice', 'Maize', 'Cotton', 'Sugar', 'Pulses', 'Millet', 'Soy'][i]}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+            {/* Power BI Tab */}
+            <TabsContent value="powerbi" className="space-y-6">
+              <div className="bg-card rounded-2xl shadow-card border border-border overflow-hidden">
+                <div className="p-6 border-b border-border">
+                  <h2 className="text-xl font-bold text-foreground">Crop Analysis Dashboard</h2>
+                  <p className="text-sm text-muted-foreground">Interactive visualizations powered by Power BI</p>
+                </div>
 
-                  <div className="text-center">
-                    <div className="inline-flex items-center gap-2 bg-card rounded-lg px-4 py-3 shadow-soft">
-                      <BarChart3 className="w-5 h-5 text-primary" />
-                      <span className="text-foreground font-medium">
-                        Connect your Power BI dashboard for real-time analytics
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-4">
-                      To embed your Power BI report, replace this placeholder with your Power BI embed URL
-                    </p>
-                  </div>
+                {/* Power BI Embed */}
+                <div className="aspect-[16/9] w-full">
+                  <iframe
+                    title="Agricultural Analytics Power BI Dashboard"
+                    src="https://app.powerbi.com/view?r=eyJrIjoiNzY0NzBkMmItYjNhMS00NGM2LWFiODEtYzcxMjExNzllZjcwIiwidCI6IjIyMmIwNjU0LWU0NDItNDJjZS1iMWViLTk3Y2FhZTQ2ODcyNSJ9"
+                    className="w-full h-full border-0"
+                    allowFullScreen
+                  />
                 </div>
               </div>
-            </div>
-          </div>
+            </TabsContent>
 
-          {/* Additional Charts Grid */}
-          <div className="grid md:grid-cols-2 gap-6 mt-8">
-            {/* Market Trends */}
-            <div className="bg-card rounded-2xl shadow-soft border border-border p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Market Rate Trends (₹/quintal)</h3>
-              <div className="space-y-4">
-                {[
-                  { crop: 'Cotton', rate: 5427, change: '+3.2%' },
-                  { crop: 'Pulses', rate: 5770, change: '+2.1%' },
-                  { crop: 'Wheat', rate: 2051, change: '+1.5%' },
-                  { crop: 'Rice', rate: 2284, change: '+4.2%' },
-                  { crop: 'Maize', rate: 1682, change: '-0.8%' },
-                ].map(({ crop, rate, change }) => (
-                  <div key={crop} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                    <span className="font-medium text-foreground">{crop}</span>
-                    <div className="flex items-center gap-4">
-                      <span className="text-foreground">₹{rate.toLocaleString()}</span>
-                      <span className={`text-sm font-medium ${change.startsWith('+') ? 'text-primary' : 'text-destructive'}`}>
-                        {change}
-                      </span>
-                    </div>
+            {/* Charts Tab */}
+            <TabsContent value="charts" className="space-y-8">
+              {/* Row 1: Crop Yield & State Distribution */}
+              <div className="grid lg:grid-cols-2 gap-6">
+                {/* Crop Yield Bar Chart */}
+                <div className="bg-card rounded-2xl shadow-soft border border-border p-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Leaf className="w-5 h-5 text-primary" />
+                    <h3 className="text-lg font-semibold text-foreground">Average Crop Yield (kg/ha)</h3>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Regional Distribution */}
-            <div className="bg-card rounded-2xl shadow-soft border border-border p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Regional Yield Distribution</h3>
-              <div className="space-y-4">
-                {[
-                  { state: 'Punjab', yield: 4200, percent: 95 },
-                  { state: 'Maharashtra', yield: 3800, percent: 85 },
-                  { state: 'Karnataka', yield: 3500, percent: 78 },
-                  { state: 'Tamil Nadu', yield: 3200, percent: 72 },
-                  { state: 'West Bengal', yield: 2900, percent: 65 },
-                ].map(({ state, yield: yieldVal, percent }) => (
-                  <div key={state}>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-foreground">{state}</span>
-                      <span className="text-muted-foreground">{yieldVal.toLocaleString()} kg/ha</span>
-                    </div>
-                    <div className="w-full h-2 bg-border rounded-full overflow-hidden">
-                      <div
-                        className="h-full gradient-hero rounded-full transition-all duration-500"
-                        style={{ width: `${percent}%` }}
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={cropYieldData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="crop" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                      <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'hsl(var(--card))', 
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px'
+                        }}
                       />
-                    </div>
+                      <Bar dataKey="avgYield" radius={[4, 4, 0, 0]}>
+                        {cropYieldData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* State Distribution Pie Chart */}
+                <div className="bg-card rounded-2xl shadow-soft border border-border p-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <MapPin className="w-5 h-5 text-primary" />
+                    <h3 className="text-lg font-semibold text-foreground">Data Distribution by State (%)</h3>
                   </div>
-                ))}
+                  <ResponsiveContainer width="100%" height={300}>
+                    <RechartsPie>
+                      <Pie
+                        data={stateDistribution}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={100}
+                        paddingAngle={2}
+                        dataKey="value"
+                        label={({ name, value }) => `${name}: ${value}%`}
+                      >
+                        {stateDistribution.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </RechartsPie>
+                  </ResponsiveContainer>
+                </div>
               </div>
-            </div>
-          </div>
+
+              {/* Row 2: Market Trends Line Chart */}
+              <div className="bg-card rounded-2xl shadow-soft border border-border p-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <TrendingUp className="w-5 h-5 text-primary" />
+                  <h3 className="text-lg font-semibold text-foreground">Market Rate Trends (₹/quintal) - 2020 to 2024</h3>
+                </div>
+                <ResponsiveContainer width="100%" height={350}>
+                  <LineChart data={marketTrendsData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="year" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                    <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Legend />
+                    <Line type="monotone" dataKey="Cotton" stroke="#ec4899" strokeWidth={2} dot={{ r: 4 }} />
+                    <Line type="monotone" dataKey="Pulses" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 4 }} />
+                    <Line type="monotone" dataKey="Wheat" stroke="#22c55e" strokeWidth={2} dot={{ r: 4 }} />
+                    <Line type="monotone" dataKey="Rice" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Row 3: Soil Type & Irrigation */}
+              <div className="grid lg:grid-cols-2 gap-6">
+                {/* Soil Type Area Chart */}
+                <div className="bg-card rounded-2xl shadow-soft border border-border p-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Droplets className="w-5 h-5 text-primary" />
+                    <h3 className="text-lg font-semibold text-foreground">Yield by Soil Type (kg/ha)</h3>
+                  </div>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <AreaChart data={soilTypeData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="type" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                      <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'hsl(var(--card))', 
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px'
+                        }}
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="avgYield" 
+                        stroke="#22c55e" 
+                        fill="url(#colorYield)" 
+                      />
+                      <defs>
+                        <linearGradient id="colorYield" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Irrigation Distribution */}
+                <div className="bg-card rounded-2xl shadow-soft border border-border p-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Droplets className="w-5 h-5 text-primary" />
+                    <h3 className="text-lg font-semibold text-foreground">Irrigation Type Distribution (%)</h3>
+                  </div>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <RechartsPie>
+                      <Pie
+                        data={irrigationData}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                        dataKey="value"
+                        label={({ name, value }) => `${name}: ${value}%`}
+                      >
+                        {irrigationData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </RechartsPie>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Row 4: Climate Impact Radar */}
+              <div className="bg-card rounded-2xl shadow-soft border border-border p-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <Thermometer className="w-5 h-5 text-primary" />
+                  <h3 className="text-lg font-semibold text-foreground">Climate & Soil Parameters - Optimal vs Current</h3>
+                </div>
+                <ResponsiveContainer width="100%" height={400}>
+                  <RadarChart data={climateImpactData}>
+                    <PolarGrid stroke="hsl(var(--border))" />
+                    <PolarAngleAxis dataKey="parameter" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                    <PolarRadiusAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                    <Radar name="Optimal" dataKey="optimal" stroke="#22c55e" fill="#22c55e" fillOpacity={0.3} />
+                    <Radar name="Current" dataKey="current" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
+                    <Legend />
+                    <Tooltip />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Row 5: Summary Cards */}
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-card rounded-xl shadow-soft border border-border p-4">
+                  <p className="text-sm text-muted-foreground mb-1">Highest Yield Crop</p>
+                  <p className="text-xl font-bold text-foreground">Sugarcane</p>
+                  <p className="text-sm text-primary">2,680 kg/ha avg</p>
+                </div>
+                <div className="bg-card rounded-xl shadow-soft border border-border p-4">
+                  <p className="text-sm text-muted-foreground mb-1">Best Performing State</p>
+                  <p className="text-xl font-bold text-foreground">Punjab</p>
+                  <p className="text-sm text-primary">4,200 kg/ha avg</p>
+                </div>
+                <div className="bg-card rounded-xl shadow-soft border border-border p-4">
+                  <p className="text-sm text-muted-foreground mb-1">Most Efficient Irrigation</p>
+                  <p className="text-xl font-bold text-foreground">Drip</p>
+                  <p className="text-sm text-primary">28% higher yield</p>
+                </div>
+                <div className="bg-card rounded-xl shadow-soft border border-border p-4">
+                  <p className="text-sm text-muted-foreground mb-1">Best Soil Type</p>
+                  <p className="text-xl font-bold text-foreground">Alluvial</p>
+                  <p className="text-sm text-primary">2,780 kg/ha avg</p>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
 

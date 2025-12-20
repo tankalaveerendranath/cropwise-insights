@@ -137,15 +137,16 @@ const Cart: React.FC = () => {
                 </div>
               </div>
 
-              <Button
-                variant="hero"
-                size="lg"
-                className="w-full gap-2"
-                onClick={handleCheckout}
-              >
-                Proceed to Checkout
-                <ArrowRight className="w-5 h-5" />
-              </Button>
+              <Link to="/checkout">
+                <Button
+                  variant="hero"
+                  size="lg"
+                  className="w-full gap-2"
+                >
+                  Proceed to Checkout
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
 
               <Link to="/shop">
                 <Button variant="ghost" className="w-full mt-3">
