@@ -12,6 +12,8 @@ import CropPrediction from "./pages/CropPrediction";
 import Analytics from "./pages/Analytics";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Orders from "./pages/Orders";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -66,6 +68,22 @@ const App = () => {
                 element={
                   isAuthenticated 
                     ? <Cart /> 
+                    : <Navigate to="/auth" replace />
+                } 
+              />
+              <Route 
+                path="/checkout" 
+                element={
+                  isAuthenticated 
+                    ? <Checkout /> 
+                    : <Navigate to="/auth" replace />
+                } 
+              />
+              <Route 
+                path="/orders" 
+                element={
+                  isAuthenticated 
+                    ? <Orders /> 
                     : <Navigate to="/auth" replace />
                 } 
               />
