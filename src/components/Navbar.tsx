@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Leaf, ShoppingCart, User, Menu, X, BarChart3, Store, Package } from 'lucide-react';
+import { Leaf, ShoppingCart, User, Menu, X, BarChart3, Store, Package, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
@@ -8,9 +8,10 @@ import { useState } from 'react';
 interface NavbarProps {
   isAuthenticated: boolean;
   onLogout: () => void;
+  isAdmin?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout }) => {
+const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout, isAdmin = false }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { totalItems } = useCart();
@@ -22,6 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout }) => {
     { path: '/analytics', label: 'Analytics', icon: BarChart3 },
     { path: '/shop', label: 'Shop', icon: Store },
     ...(isAuthenticated ? [{ path: '/orders', label: 'My Orders', icon: Package }] : []),
+    ...(isAdmin ? [{ path: '/admin', label: 'Admin', icon: Shield }] : []),
   ];
 
   const isActive = (path: string) => location.pathname === path;

@@ -3,8 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Footer from '@/components/Footer';
-import { Brain, Leaf, Droplets, Thermometer, CloudRain, FlaskConical, TrendingUp, Sparkles } from 'lucide-react';
+import { Brain, Leaf, Droplets, Thermometer, CloudRain, FlaskConical, TrendingUp, Sparkles, Sprout, Sun, Wind, Mountain } from 'lucide-react';
 import { toast } from 'sonner';
+import cropAnalytics from '@/assets/crop-analytics.jpg';
+import smartFarming from '@/assets/smart-farming.jpg';
 
 const states = ['Maharashtra', 'Punjab', 'Karnataka', 'Tamil Nadu', 'Uttar Pradesh', 'West Bengal', 'Rajasthan', 'Gujarat'];
 const soilTypes = ['Black', 'Red', 'Alluvial', 'Laterite', 'Saline', 'Arid'];
@@ -83,6 +85,69 @@ const CropPrediction: React.FC = () => {
           <p className="text-primary-foreground/80 max-w-2xl mx-auto">
             Enter your soil and environmental parameters to get AI-powered crop recommendations and yield predictions.
           </p>
+        </div>
+      </section>
+
+      {/* About Crop Prediction */}
+      <section className="py-12 bg-accent">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <h2 className="text-2xl font-bold text-foreground mb-4">
+                Understanding Crop Prediction Technology
+              </h2>
+              <p className="text-muted-foreground mb-4">
+                Crop prediction uses machine learning algorithms trained on historical agricultural data, 
+                including soil conditions, weather patterns, and yield outcomes from across India. Our 
+                model analyzes multiple factors to recommend the optimal crop for your specific conditions.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <Thermometer className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-foreground">Climate Analysis</h4>
+                    <p className="text-sm text-muted-foreground">Temperature & humidity patterns</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <Mountain className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-foreground">Soil Properties</h4>
+                    <p className="text-sm text-muted-foreground">Nutrient & pH levels</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <CloudRain className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-foreground">Rainfall Data</h4>
+                    <p className="text-sm text-muted-foreground">Annual precipitation patterns</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <TrendingUp className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-foreground">Market Trends</h4>
+                    <p className="text-sm text-muted-foreground">Current crop prices</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <img
+                src={cropAnalytics}
+                alt="Farmer using tablet for crop analytics in field"
+                className="rounded-2xl shadow-card w-full"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -300,15 +365,44 @@ const CropPrediction: React.FC = () => {
 
               {/* Quick Tips */}
               <div className="bg-accent rounded-2xl p-6">
-                <h3 className="font-semibold text-foreground mb-4">💡 Quick Tips</h3>
+                <h3 className="font-semibold text-foreground mb-4">💡 Agricultural Tips</h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li>• Optimal pH for most crops: 6.0 - 7.5</li>
                   <li>• Higher N:P:K ratios favor leafy crops</li>
                   <li>• Rainfall above 200mm suits rice cultivation</li>
                   <li>• Black soil is ideal for cotton and soybeans</li>
+                  <li>• Alluvial soil supports diverse crop rotation</li>
+                  <li>• Test soil every season for best results</li>
                 </ul>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Crop Information */}
+      <section className="py-12 bg-accent">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl font-bold text-foreground text-center mb-8">
+            Major Crops & Their Requirements
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { name: 'Wheat', soil: 'Loamy/Alluvial', temp: '15-25°C', rainfall: '250-400mm', icon: '🌾' },
+              { name: 'Rice', soil: 'Clayey/Loamy', temp: '20-35°C', rainfall: '1200-1400mm', icon: '🍚' },
+              { name: 'Cotton', soil: 'Black/Alluvial', temp: '21-35°C', rainfall: '500-1000mm', icon: '🏵️' },
+              { name: 'Sugarcane', soil: 'Loamy', temp: '20-40°C', rainfall: '750-1200mm', icon: '🎋' },
+            ].map((crop) => (
+              <div key={crop.name} className="bg-card rounded-xl p-5 border border-border">
+                <div className="text-3xl mb-3">{crop.icon}</div>
+                <h3 className="font-semibold text-foreground mb-2">{crop.name}</h3>
+                <div className="space-y-1 text-sm text-muted-foreground">
+                  <p><span className="font-medium">Soil:</span> {crop.soil}</p>
+                  <p><span className="font-medium">Temp:</span> {crop.temp}</p>
+                  <p><span className="font-medium">Rainfall:</span> {crop.rainfall}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
