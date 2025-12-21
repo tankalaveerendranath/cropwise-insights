@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,10 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Leaf, Mail, Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
-interface AuthPageProps {
-  onLogin: (email: string, name: string) => void;
-}
+import { useAuth } from '@/contexts/AuthContext';
 
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -22,12 +19,13 @@ const loginSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
-const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
+const AuthPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { user, signIn, signUp, loading } = useAuth();
   const [isSignup, setIsSignup] = useState(searchParams.get('mode') === 'signup');
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -37,6 +35,12 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  useEffect(() => {
+    if (user && !loading) {
+      navigate('/');
+    }
+  }, [user, loading, navigate]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -45,7 +49,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
     setErrors({});
 
     try {
@@ -59,15 +63,22 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
             }
           });
           setErrors(fieldErrors);
-          setLoading(false);
+          setSubmitting(false);
           return;
         }
 
-        // Simulate signup
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        localStorage.setItem('user', JSON.stringify({ email: formData.email, name: formData.name }));
+        const { error } = await signUp(formData.email, formData.password, formData.name);
+        if (error) {
+          if (error.message.includes('already registered')) {
+            toast.error('This email is already registered. Please sign in.');
+          } else {
+            toast.error(error.message);
+          }
+          setSubmitting(false);
+          return;
+        }
+        
         toast.success('Account created successfully!');
-        onLogin(formData.email, formData.name);
         navigate('/');
       } else {
         const result = loginSchema.safeParse(formData);
@@ -79,23 +90,38 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
             }
           });
           setErrors(fieldErrors);
-          setLoading(false);
+          setSubmitting(false);
           return;
         }
 
-        // Simulate login
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        localStorage.setItem('user', JSON.stringify({ email: formData.email, name: formData.email.split('@')[0] }));
+        const { error } = await signIn(formData.email, formData.password);
+        if (error) {
+          if (error.message.includes('Invalid login credentials')) {
+            toast.error('Invalid email or password. Please try again.');
+          } else {
+            toast.error(error.message);
+          }
+          setSubmitting(false);
+          return;
+        }
+        
         toast.success('Welcome back!');
-        onLogin(formData.email, formData.email.split('@')[0]);
         navigate('/');
       }
     } catch (error) {
       toast.error('Something went wrong. Please try again.');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex">
@@ -184,8 +210,8 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
               {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
             </div>
 
-            <Button type="submit" variant="hero" size="lg" className="w-full gap-2" disabled={loading}>
-              {loading ? (
+            <Button type="submit" variant="hero" size="lg" className="w-full gap-2" disabled={submitting}>
+              {submitting ? (
                 <span className="flex items-center gap-2">
                   <span className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                   {isSignup ? 'Creating account...' : 'Signing in...'}

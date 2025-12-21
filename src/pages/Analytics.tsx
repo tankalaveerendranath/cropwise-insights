@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Footer from '@/components/Footer';
-import { BarChart3, TrendingUp, PieChart, Activity, Droplets, Thermometer, Leaf, MapPin } from 'lucide-react';
+import { BarChart3, TrendingUp, PieChart, Activity, Droplets, Thermometer, Leaf, MapPin, Sprout, Sun } from 'lucide-react';
 import { 
   BarChart, 
   Bar, 
@@ -24,6 +24,8 @@ import {
   Radar
 } from 'recharts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import cropAnalytics from '@/assets/crop-analytics.jpg';
+import smartFarming from '@/assets/smart-farming.jpg';
 
 // Data aggregated from the dataset
 const cropYieldData = [
@@ -101,6 +103,43 @@ const Analytics: React.FC = () => {
           <p className="text-primary-foreground/80 max-w-2xl mx-auto">
             Visualize crop trends, market rates, and yield patterns with interactive Power BI and custom data visualizations.
           </p>
+        </div>
+      </section>
+
+      {/* About Analytics */}
+      <section className="py-12 bg-accent">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <h2 className="text-2xl font-bold text-foreground mb-4">
+                Data-Driven Agricultural Insights
+              </h2>
+              <p className="text-muted-foreground mb-4">
+                Our analytics platform processes agricultural data from across India, providing actionable 
+                insights on crop performance, market trends, and environmental factors. Make informed 
+                decisions based on real data from thousands of farms.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-card rounded-xl p-4 border border-border">
+                  <Sprout className="w-8 h-8 text-primary mb-2" />
+                  <h4 className="font-semibold text-foreground">Yield Analysis</h4>
+                  <p className="text-sm text-muted-foreground">Compare crop yields across regions</p>
+                </div>
+                <div className="bg-card rounded-xl p-4 border border-border">
+                  <Sun className="w-8 h-8 text-secondary mb-2" />
+                  <h4 className="font-semibold text-foreground">Climate Impact</h4>
+                  <p className="text-sm text-muted-foreground">Understand weather effects on crops</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <img
+                src={smartFarming}
+                alt="Modern agricultural analytics with drone technology"
+                className="rounded-2xl shadow-card w-full"
+              />
+            </div>
+          </div>
         </div>
       </section>
 

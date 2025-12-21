@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { CartItem, Product } from '@/types';
 import { toast } from 'sonner';
+import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface CartContextType {
   items: CartItem[];
@@ -16,8 +18,15 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const { user } = useAuth();
 
   const addToCart = (product: Product) => {
+    if (!user) {
+      toast.error('Please sign in to add items to cart');
+      window.location.href = '/auth';
+      return;
+    }
+
     setItems(prev => {
       const existingItem = prev.find(item => item.id === product.id);
       if (existingItem) {
