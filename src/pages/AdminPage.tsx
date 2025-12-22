@@ -213,6 +213,26 @@ const AdminPage: React.FC = () => {
     } else {
       toast.success('Order updated successfully');
       fetchOrders();
+
+      // Send email notification
+      try {
+        const response = await supabase.functions.invoke('send-order-notification', {
+          body: {
+            orderId,
+            newStatus: status,
+            trackingNumber: trackingNumber || undefined,
+          },
+        });
+        
+        if (response.error) {
+          console.error('Email notification failed:', response.error);
+          toast.error('Order updated but email notification failed');
+        } else {
+          toast.success('Customer notified via email');
+        }
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError);
+      }
     }
   };
 
