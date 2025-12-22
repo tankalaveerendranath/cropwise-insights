@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,6 +8,7 @@ import Footer from '@/components/Footer';
 import { Link, useNavigate } from 'react-router-dom';
 import { CreditCard, Truck, MapPin, Check, ArrowLeft, ShieldCheck, Package } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ShippingDetails {
   fullName: string;
@@ -19,6 +21,7 @@ interface ShippingDetails {
 
 const Checkout: React.FC = () => {
   const { items, totalPrice, clearCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState<'shipping' | 'payment' | 'confirmation'>('shipping');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -46,34 +49,80 @@ const Checkout: React.FC = () => {
   };
 
   const handlePayment = async () => {
+    if (!user) {
+      toast.error('Please sign in to complete your order');
+      navigate('/auth');
+      return;
+    }
+
     setIsProcessing(true);
     
-    // Simulate Stripe payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Generate order ID
-    const newOrderId = `AGR${Date.now().toString().slice(-8)}`;
-    setOrderId(newOrderId);
-    
-    // Save order to localStorage for tracking
-    const order = {
-      id: newOrderId,
-      items: items,
-      shippingDetails,
-      totalAmount: finalTotal,
-      status: 'confirmed',
-      createdAt: new Date().toISOString(),
-      estimatedDelivery: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-    };
-    
-    const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-    localStorage.setItem('orders', JSON.stringify([order, ...existingOrders]));
-    
-    clearCart();
-    setStep('confirmation');
-    setIsProcessing(false);
-    toast.success('Payment successful! Order placed.');
+    try {
+      // Simulate Stripe payment processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Create order in database
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert([{
+          user_id: user.id,
+          total_amount: finalTotal,
+          shipping_address: JSON.parse(JSON.stringify(shippingDetails)),
+          status: 'confirmed' as const,
+        }])
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('Error creating order:', orderError);
+        toast.error('Failed to create order. Please try again.');
+        setIsProcessing(false);
+        return;
+      }
+
+      // Create order items
+      const orderItems = items.map(item => ({
+        order_id: orderData.id,
+        product_id: item.id,
+        product_name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) {
+        console.error('Error creating order items:', itemsError);
+        // Order was created but items failed - still show success
+      }
+
+      setOrderId(orderData.id);
+      clearCart();
+      setStep('confirmation');
+      toast.success('Payment successful! Order placed.');
+    } catch (err) {
+      console.error('Payment error:', err);
+      toast.error('Payment failed. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
+
+  if (!user) {
+    return (
+      <main className="min-h-screen bg-background pt-20">
+        <div className="container mx-auto px-4 py-20 text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Please sign in to checkout</h1>
+          <Link to="/auth">
+            <Button variant="hero">Sign In</Button>
+          </Link>
+        </div>
+        <Footer />
+      </main>
+    );
+  }
 
   if (items.length === 0 && step !== 'confirmation') {
     navigate('/cart');
