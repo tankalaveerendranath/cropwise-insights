@@ -21,7 +21,7 @@ interface ShippingDetails {
 
 const Checkout: React.FC = () => {
   const { items, totalPrice, clearCart } = useCart();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState<'shipping' | 'payment' | 'confirmation'>('shipping');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -37,6 +37,22 @@ const Checkout: React.FC = () => {
 
   const tax = Math.round(totalPrice * 0.05);
   const finalTotal = totalPrice + tax;
+
+  // Redirect admin users away from checkout
+  if (isAdmin) {
+    return (
+      <main className="min-h-screen bg-background pt-20">
+        <div className="container mx-auto px-4 py-20 text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Admin users cannot place orders</h1>
+          <p className="text-muted-foreground mb-6">Please use a regular user account to make purchases.</p>
+          <Link to="/shop">
+            <Button variant="hero">Back to Shop</Button>
+          </Link>
+        </div>
+        <Footer />
+      </main>
+    );
+  }
 
   const handleShippingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
