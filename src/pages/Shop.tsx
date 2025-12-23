@@ -1,14 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductCard from '@/components/ProductCard';
 import Footer from '@/components/Footer';
-import { products, categories } from '@/data/products';
-import { Search, SlidersHorizontal, ShoppingBag } from 'lucide-react';
+import { Search, SlidersHorizontal, ShoppingBag, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
+import { Product } from '@/types';
 
 const Shop: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>(['All']);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching products:', error);
+        return;
+      }
+
+      const formattedProducts: Product[] = (data || []).map(p => ({
+        id: p.id,
+        name: p.name,
+        description: p.description || '',
+        price: Number(p.price),
+        image: p.image_url || 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop',
+        category: p.category,
+        stock: p.stock,
+        unit: p.unit,
+      }));
+
+      setProducts(formattedProducts);
+
+      // Extract unique categories
+      const uniqueCategories = ['All', ...new Set(formattedProducts.map(p => p.category))];
+      setCategories(uniqueCategories);
+    } catch (err) {
+      console.error('Error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -71,7 +115,11 @@ const Shop: React.FC = () => {
       {/* Products Grid */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          {filteredProducts.length > 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : filteredProducts.length > 0 ? (
             <>
               <p className="text-muted-foreground mb-6">
                 Showing {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
