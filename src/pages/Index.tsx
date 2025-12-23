@@ -3,15 +3,39 @@ import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BarChart3, ShoppingBag, Brain, Shield, Zap, Users, Sprout, Droplets, Sun, Tractor, Leaf, TrendingUp } from 'lucide-react';
+import { 
+  ArrowRight, BarChart3, ShoppingBag, Brain, Shield, Zap, Users, 
+  Sprout, Droplets, Sun, Tractor, Leaf, TrendingUp, CloudRain,
+  Wheat, Globe, Target, Award, BookOpen, ChevronRight
+} from 'lucide-react';
 import farmingTech from '@/assets/farming-technology.jpg';
 import organicHarvest from '@/assets/organic-harvest.jpg';
 import smartFarming from '@/assets/smart-farming.jpg';
+import aerialFarmland from '@/assets/aerial-farmland.jpg';
+import farmerTechnology from '@/assets/farmer-technology.jpg';
+import soilAnalysis from '@/assets/soil-analysis.jpg';
+import greenhouseTech from '@/assets/greenhouse-tech.jpg';
 
 const Index: React.FC = () => {
   return (
     <main className="min-h-screen">
       <Hero />
+
+      {/* Aerial Farmland Banner */}
+      <section className="relative h-64 md:h-80 overflow-hidden">
+        <img
+          src={aerialFarmland}
+          alt="Aerial view of modern irrigated farmland"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent flex items-center">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl md:text-4xl font-bold text-primary-foreground max-w-lg">
+              Revolutionizing Agriculture with Data-Driven Insights
+            </h2>
+          </div>
+        </div>
+      </section>
 
       {/* Features Section */}
       <section className="py-20 bg-background">
@@ -137,8 +161,116 @@ const Index: React.FC = () => {
         </div>
       </section>
 
-      {/* Agricultural Benefits */}
+      {/* The Science of Farming Section */}
       <section className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 bg-secondary/10 rounded-full px-4 py-2 mb-6">
+              <BookOpen className="w-4 h-4 text-secondary" />
+              <span className="text-sm font-medium text-secondary">Agricultural Knowledge</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              The Science Behind <span className="text-primary">Smart Farming</span>
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Understanding the fundamentals of modern agriculture helps farmers make informed decisions 
+              that lead to better harvests and sustainable practices.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="relative overflow-hidden rounded-2xl group">
+              <img 
+                src={soilAnalysis} 
+                alt="Soil analysis and testing" 
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent flex flex-col justify-end p-6">
+                <h3 className="text-xl font-bold text-primary-foreground mb-2">Soil Health</h3>
+                <p className="text-primary-foreground/80 text-sm">
+                  Healthy soil is the foundation of productive agriculture. Regular testing helps optimize 
+                  nutrient levels and pH balance for maximum crop growth.
+                </p>
+              </div>
+            </div>
+            
+            <div className="relative overflow-hidden rounded-2xl group">
+              <img 
+                src={farmerTechnology} 
+                alt="Farmer using technology" 
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent flex flex-col justify-end p-6">
+                <h3 className="text-xl font-bold text-primary-foreground mb-2">Digital Tools</h3>
+                <p className="text-primary-foreground/80 text-sm">
+                  Mobile apps and sensors enable real-time monitoring of crop health, weather conditions, 
+                  and soil moisture levels from anywhere.
+                </p>
+              </div>
+            </div>
+            
+            <div className="relative overflow-hidden rounded-2xl group">
+              <img 
+                src={greenhouseTech} 
+                alt="Modern greenhouse technology" 
+                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent flex flex-col justify-end p-6">
+                <h3 className="text-xl font-bold text-primary-foreground mb-2">Controlled Environment</h3>
+                <p className="text-primary-foreground/80 text-sm">
+                  Greenhouses and vertical farms allow year-round production with precise control over 
+                  temperature, humidity, and light.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Agricultural Facts */}
+          <div className="bg-card rounded-2xl border border-border p-8 md:p-12">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-2xl font-bold text-foreground mb-6">Key Agricultural Insights</h3>
+                <ul className="space-y-4">
+                  {[
+                    { icon: Wheat, text: 'India is the world\'s second-largest producer of rice and wheat' },
+                    { icon: Globe, text: 'Agriculture contributes about 18% to India\'s GDP' },
+                    { icon: CloudRain, text: 'Monsoon patterns affect 60% of cultivated land in India' },
+                    { icon: Target, text: 'Precision farming can reduce water usage by up to 30%' },
+                  ].map(({ icon: Icon, text }, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Icon className="w-4 h-4 text-primary" />
+                      </div>
+                      <p className="text-muted-foreground">{text}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-foreground mb-6">Modern Farming Practices</h3>
+                <ul className="space-y-4">
+                  {[
+                    { icon: Tractor, text: 'Mechanization increases productivity by 25-30% on average' },
+                    { icon: Droplets, text: 'Drip irrigation saves 30-50% water compared to flood irrigation' },
+                    { icon: Leaf, text: 'Organic farming improves soil fertility over time' },
+                    { icon: Award, text: 'Quality seeds can boost yields by 20-25%' },
+                  ].map(({ icon: Icon, text }, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Icon className="w-4 h-4 text-secondary" />
+                      </div>
+                      <p className="text-muted-foreground">{text}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Agricultural Benefits */}
+      <section className="py-20 bg-accent">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -194,6 +326,98 @@ const Index: React.FC = () => {
                 <Icon className="w-8 h-8 text-primary mx-auto mb-3" />
                 <p className="text-3xl font-bold text-foreground mb-1">{value}</p>
                 <p className="text-muted-foreground">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              How <span className="text-primary">AgroSmart</span> Works
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Get started in just a few simple steps and transform your farming practices
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              { step: '01', title: 'Sign Up', description: 'Create your free account and set up your farm profile with location and crop details.' },
+              { step: '02', title: 'Input Data', description: 'Enter soil parameters like nitrogen, phosphorus, potassium, and pH levels.' },
+              { step: '03', title: 'Get Predictions', description: 'Our AI analyzes your data and recommends the best crops for your conditions.' },
+              { step: '04', title: 'Shop & Grow', description: 'Purchase quality inputs from our shop and track your progress with analytics.' },
+            ].map(({ step, title, description }, index) => (
+              <div key={step} className="relative">
+                <div className="bg-card rounded-2xl p-6 border border-border h-full">
+                  <div className="w-12 h-12 rounded-xl gradient-hero flex items-center justify-center mb-4">
+                    <span className="text-primary-foreground font-bold">{step}</span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
+                  <p className="text-muted-foreground text-sm">{description}</p>
+                </div>
+                {index < 3 && (
+                  <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10">
+                    <ChevronRight className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-accent">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              What <span className="text-primary">Farmers</span> Say
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Real stories from farmers who have benefited from AgroSmart
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: 'Rajesh Kumar',
+                location: 'Punjab',
+                quote: 'AgroSmart helped me increase my wheat yield by 35%. The crop predictions are incredibly accurate!',
+                crop: 'Wheat & Rice',
+              },
+              {
+                name: 'Priya Sharma',
+                location: 'Maharashtra',
+                quote: 'The analytics dashboard gives me insights I never had before. I can now plan my seasons better.',
+                crop: 'Cotton & Soybean',
+              },
+              {
+                name: 'Amit Patel',
+                location: 'Gujarat',
+                quote: 'Shopping for quality seeds and fertilizers has never been easier. Great prices and fast delivery!',
+                crop: 'Groundnut & Castor',
+              },
+            ].map(({ name, location, quote, crop }) => (
+              <div key={name} className="bg-card rounded-2xl p-6 border border-border">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full gradient-hero flex items-center justify-center">
+                    <span className="text-primary-foreground font-bold text-lg">{name.charAt(0)}</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">{name}</p>
+                    <p className="text-sm text-muted-foreground">{location}</p>
+                  </div>
+                </div>
+                <p className="text-muted-foreground mb-4">"{quote}"</p>
+                <div className="flex items-center gap-2">
+                  <Leaf className="w-4 h-4 text-primary" />
+                  <span className="text-sm text-primary font-medium">{crop}</span>
+                </div>
               </div>
             ))}
           </div>
