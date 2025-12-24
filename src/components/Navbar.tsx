@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Leaf, ShoppingCart, User, Menu, X, BarChart3, Store, Package, Shield } from 'lucide-react';
+import { Leaf, ShoppingCart, User, Menu, X, BarChart3, Store, Package, Shield, History, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
@@ -23,8 +23,10 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout, isAdmin = fa
     { path: '/predict', label: 'Crop Prediction', icon: BarChart3 },
     { path: '/analytics', label: 'Analytics', icon: BarChart3 },
     { path: '/shop', label: 'Shop', icon: Store },
+    ...(isAuthenticated ? [{ path: '/history', label: 'History', icon: History }] : []),
     ...(isAuthenticated ? [{ path: '/orders', label: 'My Orders', icon: Package }] : []),
     ...(isAdmin ? [{ path: '/admin', label: 'Admin', icon: Shield }] : []),
+    { path: '/contact', label: 'Contact Us', icon: Phone },
   ];
 
   const isActive = (path: string) => location.pathname === path;

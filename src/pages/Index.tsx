@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import {
   Sprout, Droplets, Sun, Tractor, Leaf, TrendingUp, CloudRain,
   Wheat, Globe, Target, Award, BookOpen, ChevronRight
 } from 'lucide-react';
+import { useScrollAnimation, useMultiScrollAnimation } from '@/hooks/use-scroll-animation';
 import farmingTech from '@/assets/farming-technology.jpg';
 import organicHarvest from '@/assets/organic-harvest.jpg';
 import smartFarming from '@/assets/smart-farming.jpg';
@@ -17,12 +18,39 @@ import soilAnalysis from '@/assets/soil-analysis.jpg';
 import greenhouseTech from '@/assets/greenhouse-tech.jpg';
 
 const Index: React.FC = () => {
+  const bannerAnimation = useScrollAnimation();
+  const featuresAnimation = useScrollAnimation();
+  const { setRef: setFeatureRef, visibleItems: featureVisibility } = useMultiScrollAnimation(6, { threshold: 0.1 });
+  const aboutAnimation = useScrollAnimation();
+  const scienceAnimation = useScrollAnimation();
+  const { setRef: setScienceCardRef, visibleItems: scienceCardVisibility } = useMultiScrollAnimation(3, { threshold: 0.2 });
+  const benefitsAnimation = useScrollAnimation();
+  const { setRef: setStatRef, visibleItems: statVisibility } = useMultiScrollAnimation(4, { threshold: 0.2 });
+  const howItWorksAnimation = useScrollAnimation();
+  const { setRef: setStepRef, visibleItems: stepVisibility } = useMultiScrollAnimation(4, { threshold: 0.2 });
+  const testimonialsAnimation = useScrollAnimation();
+  const { setRef: setTestimonialRef, visibleItems: testimonialVisibility } = useMultiScrollAnimation(3, { threshold: 0.2 });
+  const ctaAnimation = useScrollAnimation();
+
+  // Smooth scroll behavior
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = 'smooth';
+    return () => {
+      document.documentElement.style.scrollBehavior = 'auto';
+    };
+  }, []);
+
   return (
     <main className="min-h-screen">
       <Hero />
 
       {/* Aerial Farmland Banner */}
-      <section className="relative h-64 md:h-80 overflow-hidden">
+      <section 
+        ref={bannerAnimation.ref}
+        className={`relative h-64 md:h-80 overflow-hidden transition-all duration-700 ${
+          bannerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
+      >
         <img
           src={aerialFarmland}
           alt="Aerial view of modern irrigated farmland"
@@ -38,9 +66,16 @@ const Index: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-background">
+      <section 
+        ref={featuresAnimation.ref}
+        className={`py-20 bg-background transition-all duration-700 ${
+          featuresAnimation.isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
         <div className="container mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 delay-100 ${
+            featuresAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Everything You Need for
               <span className="text-primary"> Smart Farming</span>
@@ -88,10 +123,14 @@ const Index: React.FC = () => {
                 description: 'Connect with fellow farmers and agricultural experts for guidance.',
                 color: 'bg-primary/10 text-primary',
               },
-            ].map(({ icon: Icon, title, description, color }) => (
+            ].map(({ icon: Icon, title, description, color }, index) => (
               <div
                 key={title}
-                className="group p-6 bg-card rounded-2xl shadow-soft hover:shadow-card transition-all duration-300 border border-border"
+                ref={setFeatureRef(index)}
+                className={`group p-6 bg-card rounded-2xl shadow-soft hover:shadow-card transition-all duration-500 border border-border hover:-translate-y-2 ${
+                  featureVisibility[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ transitionDelay: `${index * 100}ms` }}
               >
                 <div className={`w-14 h-14 rounded-xl ${color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <Icon className="w-7 h-7" />
@@ -105,10 +144,17 @@ const Index: React.FC = () => {
       </section>
 
       {/* About Agriculture Section */}
-      <section className="py-20 bg-accent">
+      <section 
+        ref={aboutAnimation.ref}
+        className={`py-20 bg-accent transition-all duration-700 ${
+          aboutAnimation.isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
+            <div className={`transition-all duration-700 delay-200 ${
+              aboutAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            }`}>
               <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mb-6">
                 <Sprout className="w-4 h-4 text-primary" />
                 <span className="text-sm font-medium text-primary">Sustainable Agriculture</span>
@@ -127,25 +173,27 @@ const Index: React.FC = () => {
                 environmental sustainability.
               </p>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-card rounded-xl p-4 border border-border">
+                <div className="bg-card rounded-xl p-4 border border-border hover:shadow-card transition-all duration-300 hover:-translate-y-1">
                   <Droplets className="w-8 h-8 text-primary mb-2" />
                   <h4 className="font-semibold text-foreground">Smart Irrigation</h4>
                   <p className="text-sm text-muted-foreground">Optimize water usage with precision farming</p>
                 </div>
-                <div className="bg-card rounded-xl p-4 border border-border">
+                <div className="bg-card rounded-xl p-4 border border-border hover:shadow-card transition-all duration-300 hover:-translate-y-1">
                   <Sun className="w-8 h-8 text-secondary mb-2" />
                   <h4 className="font-semibold text-foreground">Climate Analysis</h4>
                   <p className="text-sm text-muted-foreground">Weather-based crop recommendations</p>
                 </div>
               </div>
             </div>
-            <div className="relative">
+            <div className={`relative transition-all duration-700 delay-400 ${
+              aboutAnimation.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+            }`}>
               <img
                 src={farmingTech}
                 alt="Farmers using modern technology in agricultural field"
-                className="rounded-2xl shadow-card w-full"
+                className="rounded-2xl shadow-card w-full hover:scale-[1.02] transition-transform duration-500"
               />
-              <div className="absolute -bottom-6 -left-6 bg-card rounded-xl p-4 shadow-card border border-border">
+              <div className="absolute -bottom-6 -left-6 bg-card rounded-xl p-4 shadow-card border border-border animate-pulse">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                     <TrendingUp className="w-6 h-6 text-primary" />
@@ -162,9 +210,16 @@ const Index: React.FC = () => {
       </section>
 
       {/* The Science of Farming Section */}
-      <section className="py-20 bg-background">
+      <section 
+        ref={scienceAnimation.ref}
+        className={`py-20 bg-background transition-all duration-700 ${
+          scienceAnimation.isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
         <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 delay-100 ${
+            scienceAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
             <div className="inline-flex items-center gap-2 bg-secondary/10 rounded-full px-4 py-2 mb-6">
               <BookOpen className="w-4 h-4 text-secondary" />
               <span className="text-sm font-medium text-secondary">Agricultural Knowledge</span>
@@ -179,50 +234,30 @@ const Index: React.FC = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="relative overflow-hidden rounded-2xl group">
-              <img 
-                src={soilAnalysis} 
-                alt="Soil analysis and testing" 
-                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent flex flex-col justify-end p-6">
-                <h3 className="text-xl font-bold text-primary-foreground mb-2">Soil Health</h3>
-                <p className="text-primary-foreground/80 text-sm">
-                  Healthy soil is the foundation of productive agriculture. Regular testing helps optimize 
-                  nutrient levels and pH balance for maximum crop growth.
-                </p>
+            {[
+              { img: soilAnalysis, alt: 'Soil analysis and testing', title: 'Soil Health', desc: 'Healthy soil is the foundation of productive agriculture. Regular testing helps optimize nutrient levels and pH balance for maximum crop growth.' },
+              { img: farmerTechnology, alt: 'Farmer using technology', title: 'Digital Tools', desc: 'Mobile apps and sensors enable real-time monitoring of crop health, weather conditions, and soil moisture levels from anywhere.' },
+              { img: greenhouseTech, alt: 'Modern greenhouse technology', title: 'Controlled Environment', desc: 'Greenhouses and vertical farms allow year-round production with precise control over temperature, humidity, and light.' },
+            ].map(({ img, alt, title, desc }, index) => (
+              <div 
+                key={title}
+                ref={setScienceCardRef(index)}
+                className={`relative overflow-hidden rounded-2xl group transition-all duration-500 hover:-translate-y-2 ${
+                  scienceCardVisibility[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ transitionDelay: `${index * 150}ms` }}
+              >
+                <img 
+                  src={img} 
+                  alt={alt} 
+                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent flex flex-col justify-end p-6">
+                  <h3 className="text-xl font-bold text-primary-foreground mb-2">{title}</h3>
+                  <p className="text-primary-foreground/80 text-sm">{desc}</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="relative overflow-hidden rounded-2xl group">
-              <img 
-                src={farmerTechnology} 
-                alt="Farmer using technology" 
-                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent flex flex-col justify-end p-6">
-                <h3 className="text-xl font-bold text-primary-foreground mb-2">Digital Tools</h3>
-                <p className="text-primary-foreground/80 text-sm">
-                  Mobile apps and sensors enable real-time monitoring of crop health, weather conditions, 
-                  and soil moisture levels from anywhere.
-                </p>
-              </div>
-            </div>
-            
-            <div className="relative overflow-hidden rounded-2xl group">
-              <img 
-                src={greenhouseTech} 
-                alt="Modern greenhouse technology" 
-                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/40 to-transparent flex flex-col justify-end p-6">
-                <h3 className="text-xl font-bold text-primary-foreground mb-2">Controlled Environment</h3>
-                <p className="text-primary-foreground/80 text-sm">
-                  Greenhouses and vertical farms allow year-round production with precise control over 
-                  temperature, humidity, and light.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
 
           {/* Agricultural Facts */}
@@ -237,8 +272,8 @@ const Index: React.FC = () => {
                     { icon: CloudRain, text: 'Monsoon patterns affect 60% of cultivated land in India' },
                     { icon: Target, text: 'Precision farming can reduce water usage by up to 30%' },
                   ].map(({ icon: Icon, text }, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <li key={index} className="flex items-start gap-3 group">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300">
                         <Icon className="w-4 h-4 text-primary" />
                       </div>
                       <p className="text-muted-foreground">{text}</p>
@@ -255,8 +290,8 @@ const Index: React.FC = () => {
                     { icon: Leaf, text: 'Organic farming improves soil fertility over time' },
                     { icon: Award, text: 'Quality seeds can boost yields by 20-25%' },
                   ].map(({ icon: Icon, text }, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <li key={index} className="flex items-start gap-3 group">
+                      <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300">
                         <Icon className="w-4 h-4 text-secondary" />
                       </div>
                       <p className="text-muted-foreground">{text}</p>
