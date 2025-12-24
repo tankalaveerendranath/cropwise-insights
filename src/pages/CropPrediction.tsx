@@ -5,6 +5,8 @@ import { Label } from '@/components/ui/label';
 import Footer from '@/components/Footer';
 import { Brain, Leaf, Droplets, Thermometer, CloudRain, FlaskConical, TrendingUp, Sparkles, Sprout, Sun, Wind, Mountain } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import cropAnalytics from '@/assets/crop-analytics.jpg';
 import smartFarming from '@/assets/smart-farming.jpg';
 
@@ -20,6 +22,7 @@ interface PredictionResult {
 }
 
 const CropPrediction: React.FC = () => {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [prediction, setPrediction] = useState<PredictionResult | null>(null);
 
@@ -59,15 +62,52 @@ const CropPrediction: React.FC = () => {
       Sugarcane: 350, Pulses: 5800, Millets: 2200, Soybean: 4500
     };
 
-    setPrediction({
+    const predictedYield = Math.round(baseYield + Math.random() * 500);
+    const confidence = Math.round(75 + Math.random() * 20);
+    const marketRate = marketRates[selectedCrop] || 2000;
+
+    const predictionResult = {
       crop: selectedCrop,
-      yield: Math.round(baseYield + Math.random() * 500),
-      confidence: Math.round(75 + Math.random() * 20),
-      marketRate: marketRates[selectedCrop] || 2000,
-    });
+      yield: predictedYield,
+      confidence,
+      marketRate,
+    };
+
+    setPrediction(predictionResult);
+
+    // Save to database if user is logged in
+    if (user) {
+      try {
+        const { error } = await supabase.from('prediction_history').insert({
+          user_id: user.id,
+          state: formData.state,
+          soil_type: formData.soilType,
+          temperature: formData.temperature,
+          humidity: formData.humidity,
+          rainfall: formData.rainfall,
+          ph: formData.pH,
+          nitrogen: formData.nitrogen,
+          phosphorus: formData.phosphorus,
+          potassium: formData.potassium,
+          predicted_crop: selectedCrop,
+          predicted_yield: predictedYield,
+          confidence,
+          market_rate: marketRate,
+        });
+
+        if (error) {
+          console.error('Error saving prediction:', error);
+        } else {
+          toast.success('Prediction saved to history!');
+        }
+      } catch (err) {
+        console.error('Error saving prediction:', err);
+      }
+    } else {
+      toast.success('Prediction complete! Sign in to save predictions.');
+    }
 
     setLoading(false);
-    toast.success('Prediction complete!');
   };
 
   return (

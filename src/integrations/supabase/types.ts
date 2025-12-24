@@ -98,6 +98,63 @@ export type Database = {
         }
         Relationships: []
       }
+      prediction_history: {
+        Row: {
+          confidence: number
+          created_at: string
+          humidity: number
+          id: string
+          market_rate: number
+          nitrogen: number
+          ph: number
+          phosphorus: number
+          potassium: number
+          predicted_crop: string
+          predicted_yield: number
+          rainfall: number
+          soil_type: string
+          state: string
+          temperature: number
+          user_id: string
+        }
+        Insert: {
+          confidence: number
+          created_at?: string
+          humidity: number
+          id?: string
+          market_rate: number
+          nitrogen: number
+          ph: number
+          phosphorus: number
+          potassium: number
+          predicted_crop: string
+          predicted_yield: number
+          rainfall: number
+          soil_type: string
+          state: string
+          temperature: number
+          user_id: string
+        }
+        Update: {
+          confidence?: number
+          created_at?: string
+          humidity?: number
+          id?: string
+          market_rate?: number
+          nitrogen?: number
+          ph?: number
+          phosphorus?: number
+          potassium?: number
+          predicted_crop?: string
+          predicted_yield?: number
+          rainfall?: number
+          soil_type?: string
+          state?: string
+          temperature?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string

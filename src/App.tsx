@@ -16,6 +16,8 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import AdminPage from "./pages/AdminPage";
+import Contact from "./pages/Contact";
+import PredictionHistory from "./pages/PredictionHistory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -71,6 +73,15 @@ const AppContent = () => {
         <Route path="/predict" element={<CropPrediction />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route 
+          path="/history" 
+          element={
+            <ProtectedRoute>
+              <PredictionHistory />
+            </ProtectedRoute>
+          } 
+        />
         <Route 
           path="/cart" 
           element={
