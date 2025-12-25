@@ -420,7 +420,7 @@ const Index: React.FC = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-accent">
+      <section className="py-20 bg-accent overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -430,8 +430,11 @@ const Index: React.FC = () => {
               Real stories from farmers who have benefited from AgroSmart
             </p>
           </div>
+        </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+        {/* Continuous scrolling testimonials */}
+        <div className="relative">
+          <div className="flex animate-scroll-left">
             {[
               {
                 name: 'Rajesh Kumar',
@@ -451,8 +454,66 @@ const Index: React.FC = () => {
                 quote: 'Shopping for quality seeds and fertilizers has never been easier. Great prices and fast delivery!',
                 crop: 'Groundnut & Castor',
               },
-            ].map(({ name, location, quote, crop }) => (
-              <div key={name} className="bg-card rounded-2xl p-6 border border-border">
+              {
+                name: 'Sunita Devi',
+                location: 'Uttar Pradesh',
+                quote: 'The soil analysis feature transformed how I approach fertilization. My costs are down by 20%!',
+                crop: 'Sugarcane & Potato',
+              },
+              {
+                name: 'Vikram Singh',
+                location: 'Rajasthan',
+                quote: 'Water management insights helped me save precious resources while maintaining crop quality.',
+                crop: 'Mustard & Cumin',
+              },
+              {
+                name: 'Meena Kumari',
+                location: 'Karnataka',
+                quote: 'From prediction to harvest, AgroSmart guides me every step. Best investment for my farm!',
+                crop: 'Coffee & Pepper',
+              },
+              // Duplicate for seamless loop
+              {
+                name: 'Rajesh Kumar',
+                location: 'Punjab',
+                quote: 'AgroSmart helped me increase my wheat yield by 35%. The crop predictions are incredibly accurate!',
+                crop: 'Wheat & Rice',
+              },
+              {
+                name: 'Priya Sharma',
+                location: 'Maharashtra',
+                quote: 'The analytics dashboard gives me insights I never had before. I can now plan my seasons better.',
+                crop: 'Cotton & Soybean',
+              },
+              {
+                name: 'Amit Patel',
+                location: 'Gujarat',
+                quote: 'Shopping for quality seeds and fertilizers has never been easier. Great prices and fast delivery!',
+                crop: 'Groundnut & Castor',
+              },
+              {
+                name: 'Sunita Devi',
+                location: 'Uttar Pradesh',
+                quote: 'The soil analysis feature transformed how I approach fertilization. My costs are down by 20%!',
+                crop: 'Sugarcane & Potato',
+              },
+              {
+                name: 'Vikram Singh',
+                location: 'Rajasthan',
+                quote: 'Water management insights helped me save precious resources while maintaining crop quality.',
+                crop: 'Mustard & Cumin',
+              },
+              {
+                name: 'Meena Kumari',
+                location: 'Karnataka',
+                quote: 'From prediction to harvest, AgroSmart guides me every step. Best investment for my farm!',
+                crop: 'Coffee & Pepper',
+              },
+            ].map(({ name, location, quote, crop }, index) => (
+              <div 
+                key={`${name}-${index}`} 
+                className="flex-shrink-0 w-80 md:w-96 mx-4 bg-card rounded-2xl p-6 border border-border shadow-soft"
+              >
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 rounded-full gradient-hero flex items-center justify-center">
                     <span className="text-primary-foreground font-bold text-lg">{name.charAt(0)}</span>
