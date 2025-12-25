@@ -9,6 +9,7 @@ import {
   Wheat, Globe, Target, Award, BookOpen, ChevronRight
 } from 'lucide-react';
 import { useScrollAnimation, useMultiScrollAnimation } from '@/hooks/use-scroll-animation';
+import { useParallax, useScrollY } from '@/hooks/use-parallax';
 import farmingTech from '@/assets/farming-technology.jpg';
 import organicHarvest from '@/assets/organic-harvest.jpg';
 import smartFarming from '@/assets/smart-farming.jpg';
@@ -18,6 +19,7 @@ import soilAnalysis from '@/assets/soil-analysis.jpg';
 import greenhouseTech from '@/assets/greenhouse-tech.jpg';
 
 const Index: React.FC = () => {
+  const scrollY = useScrollY();
   const bannerAnimation = useScrollAnimation();
   const featuresAnimation = useScrollAnimation();
   const { setRef: setFeatureRef, visibleItems: featureVisibility } = useMultiScrollAnimation(6, { threshold: 0.1 });
@@ -44,21 +46,33 @@ const Index: React.FC = () => {
     <main className="min-h-screen">
       <Hero />
 
-      {/* Aerial Farmland Banner */}
+      {/* Aerial Farmland Banner with Parallax */}
       <section 
         ref={bannerAnimation.ref}
-        className={`relative h-64 md:h-80 overflow-hidden transition-all duration-700 ${
+        className={`relative h-64 md:h-96 overflow-hidden transition-all duration-700 ${
           bannerAnimation.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        <img
-          src={aerialFarmland}
-          alt="Aerial view of modern irrigated farmland"
-          className="w-full h-full object-cover"
-        />
+        <div 
+          className="absolute inset-0 will-change-transform"
+          style={{ 
+            transform: `translateY(${scrollY * 0.15}px) scale(1.1)`,
+          }}
+        >
+          <img
+            src={aerialFarmland}
+            alt="Aerial view of modern irrigated farmland"
+            className="w-full h-full object-cover"
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent flex items-center">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl md:text-4xl font-bold text-primary-foreground max-w-lg">
+            <h2 
+              className="text-2xl md:text-4xl font-bold text-primary-foreground max-w-lg"
+              style={{ 
+                transform: `translateY(${-scrollY * 0.05}px)`,
+              }}
+            >
               Revolutionizing Agriculture with Data-Driven Insights
             </h2>
           </div>
