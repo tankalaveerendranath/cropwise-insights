@@ -6,7 +6,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import '@/i18n';
 import Navbar from "@/components/Navbar";
+import VoiceAssistant from "@/components/VoiceAssistant";
+import Chatbot from "@/components/Chatbot";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import CropPrediction from "./pages/CropPrediction";
@@ -116,6 +119,8 @@ const AppContent = () => {
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <VoiceAssistant />
+      <Chatbot />
     </>
   );
 };

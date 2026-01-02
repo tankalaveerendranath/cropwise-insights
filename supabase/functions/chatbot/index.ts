@@ -25,11 +25,11 @@ serve(async (req) => {
 - Marketplace and product inquiries
 - General agricultural best practices
 
-Be friendly, concise, and helpful. If you don't know something specific about the platform, provide general farming advice instead.`;
+Be friendly, concise, and helpful. If you don't know something specific about the platform, provide general farming advice instead. You can respond in multiple languages based on user's language.`;
 
     const messages = [
       { role: 'system', content: systemPrompt },
-      ...(history || []).slice(-10).map((m: any) => ({ role: m.role, content: m.content })),
+      ...(history || []).slice(-10).map((m: { role: string; content: string }) => ({ role: m.role, content: m.content })),
       { role: 'user', content: message },
     ];
 
@@ -53,6 +53,12 @@ Be friendly, concise, and helpful. If you don't know something specific about th
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: 'Service temporarily unavailable. Please try again later.' }), {
+          status: 402,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
       throw new Error(`AI gateway error: ${response.status}`);
     }
 
@@ -62,9 +68,10 @@ Be friendly, concise, and helpful. If you don't know something specific about th
     return new Response(JSON.stringify({ response: assistantResponse }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Chatbot error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

@@ -5,23 +5,66 @@ import { Mic, MicOff, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 
+// Extend Window interface for SpeechRecognition
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface ISpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  abort(): void;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: Event) => void) | null;
+  onend: (() => void) | null;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition?: new () => ISpeechRecognition;
+    webkitSpeechRecognition?: new () => ISpeechRecognition;
+  }
+}
+
 const VoiceAssistant = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+  const [recognition, setRecognition] = useState<ISpeechRecognition | null>(null);
 
   useEffect(() => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognitionInstance = new SpeechRecognition();
+    const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognitionClass) {
+      const recognitionInstance = new SpeechRecognitionClass();
       recognitionInstance.continuous = false;
       recognitionInstance.interimResults = true;
-      recognitionInstance.lang = 'en-US';
+      recognitionInstance.lang = i18n.language || 'en-US';
       setRecognition(recognitionInstance);
     }
-  }, []);
+  }, [i18n.language]);
 
   const processCommand = useCallback((command: string) => {
     const lowerCommand = command.toLowerCase();
@@ -34,9 +77,10 @@ const VoiceAssistant = () => {
       'go shop': '/shop',
       'go to shop': '/shop',
       'store': '/shop',
-      'prediction': '/prediction',
-      'go to prediction': '/prediction',
-      'predict': '/prediction',
+      'prediction': '/predict',
+      'go to prediction': '/predict',
+      'predict': '/predict',
+      'crop prediction': '/predict',
       'analytics': '/analytics',
       'go to analytics': '/analytics',
       'cart': '/cart',
@@ -49,38 +93,40 @@ const VoiceAssistant = () => {
       'login': '/auth',
       'sign in': '/auth',
       'sign up': '/auth',
+      'history': '/history',
+      'prediction history': '/history',
     };
 
     for (const [phrase, path] of Object.entries(commands)) {
       if (lowerCommand.includes(phrase)) {
         navigate(path);
         toast({
-          title: "Voice Command",
-          description: `Navigating to ${phrase}`,
+          title: t('voice.command'),
+          description: `${t('voice.navigating')} ${phrase}`,
         });
         return true;
       }
     }
 
     toast({
-      title: "Command not recognized",
-      description: `Try saying: "Go to shop" or "Open cart"`,
+      title: t('voice.notRecognized'),
+      description: t('voice.tryAgain'),
       variant: "destructive",
     });
     return false;
-  }, [navigate]);
+  }, [navigate, t]);
 
   const startListening = () => {
     if (!recognition) {
       toast({
-        title: "Voice not supported",
-        description: "Your browser doesn't support voice recognition",
+        title: t('voice.notSupported'),
+        description: t('voice.browserNotSupported'),
         variant: "destructive",
       });
       return;
     }
 
-    recognition.onresult = (event) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       const current = event.resultIndex;
       const result = event.results[current][0].transcript;
       setTranscript(result);
@@ -94,8 +140,8 @@ const VoiceAssistant = () => {
     recognition.onerror = () => {
       setIsListening(false);
       toast({
-        title: "Error",
-        description: "Voice recognition failed. Please try again.",
+        title: t('voice.error'),
+        description: t('voice.errorMessage'),
         variant: "destructive",
       });
     };
@@ -119,6 +165,7 @@ const VoiceAssistant = () => {
         size="icon"
         variant={isListening ? "destructive" : "outline"}
         className="fixed bottom-24 right-6 z-50 h-12 w-12 rounded-full shadow-lg"
+        title={t('voice.title')}
       >
         {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
       </Button>
