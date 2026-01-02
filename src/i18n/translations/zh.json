@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "首页",
+    "prediction": "预测",
+    "analytics": "分析",
+    "history": "历史",
+    "shop": "商店",
+    "orders": "订单",
+    "contact": "联系",
+    "admin": "管理",
+    "login": "登录",
+    "signup": "注册",
+    "logout": "退出"
+  },
+  "hero": {
+    "title": "为更美好的明天",
+    "titleHighlight": "智慧农业",
+    "subtitle": "利用人工智能和数据分析的力量来优化作物产量、预测收成并做出明智的农业决策。",
+    "getStarted": "开始使用",
+    "learnMore": "了解更多",
+    "trustedBy": "受到印度10,000多名农民的信赖"
+  },
+  "features": {
+    "title": "为什么选择AgroSmart？",
+    "subtitle": "专为现代农民设计的强大工具",
+    "prediction": {
+      "title": "AI作物预测",
+      "description": "根据土壤、天气和市场条件获得最佳作物的准确预测。"
+    },
+    "analytics": {
+      "title": "智能分析",
+      "description": "通过直观的图表和洞察可视化您的农场数据，做出更好的决策。"
+    },
+    "marketplace": {
+      "title": "农业市场",
+      "description": "从可信赖的卖家处以有竞争力的价格购买种子、肥料和设备。"
+    },
+    "weather": {
+      "title": "天气洞察",
+      "description": "获取超本地天气预报和警报以保护您的作物。"
+    }
+  },
+  "stats": {
+    "farmers": "活跃农民",
+    "predictions": "预测次数",
+    "accuracy": "准确率",
+    "states": "覆盖州"
+  },
+  "testimonials": {
+    "title": "农民评价",
+    "subtitle": "从AgroSmart中受益的农民的真实故事"
+  },
+  "cta": {
+    "title": "准备好改变您的农场了吗？",
+    "subtitle": "加入数千名已经使用AgroSmart提高产量和收入的农民。",
+    "button": "免费试用"
+  },
+  "footer": {
+    "description": "通过人工智能驱动的洞察力赋能农民，实现更智能、更可持续的农业。",
+    "product": "产品",
+    "company": "公司",
+    "support": "支持",
+    "legal": "法律",
+    "newsletter": "通讯",
+    "newsletterSubtitle": "获取农业技巧和更新",
+    "emailPlaceholder": "输入您的邮箱",
+    "subscribe": "订阅",
+    "copyright": "© 2024 AgroSmart. 保留所有权利。"
+  },
+  "shop": {
+    "title": "农业商店",
+    "subtitle": "为您的农场提供优质种子、肥料和设备",
+    "searchPlaceholder": "搜索产品...",
+    "allCategories": "所有类别",
+    "addToCart": "加入购物车",
+    "outOfStock": "缺货",
+    "inStock": "有货"
+  },
+  "cart": {
+    "title": "购物车",
+    "empty": "您的购物车是空的",
+    "continueShopping": "继续购物",
+    "total": "总计",
+    "checkout": "结账"
+  },
+  "chatbot": {
+    "title": "AgroSmart助手",
+    "placeholder": "问我任何关于农业的问题...",
+    "send": "发送",
+    "greeting": "你好！我是您的AgroSmart助手。今天我能帮您什么？"
+  },
+  "voice": {
+    "listening": "正在听...",
+    "speak": "说出命令",
+    "commands": {
+      "goHome": "去首页",
+      "goShop": "去商店",
+      "goPrediction": "去预测",
+      "goAnalytics": "去分析",
+      "goCart": "去购物车",
+      "goContact": "去联系"
+    }
+  },
+  "language": {
+    "select": "选择语言"
+  }
+}

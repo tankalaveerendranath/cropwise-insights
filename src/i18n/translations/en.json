@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Home",
+    "prediction": "Prediction",
+    "analytics": "Analytics",
+    "history": "History",
+    "shop": "Shop",
+    "orders": "Orders",
+    "contact": "Contact",
+    "admin": "Admin",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout"
+  },
+  "hero": {
+    "title": "Smart Farming for a",
+    "titleHighlight": "Better Tomorrow",
+    "subtitle": "Harness the power of AI and data analytics to optimize your crop yields, predict harvests, and make informed farming decisions.",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "trustedBy": "Trusted by 10,000+ farmers across India"
+  },
+  "features": {
+    "title": "Why Choose AgroSmart?",
+    "subtitle": "Powerful tools designed specifically for modern farmers",
+    "prediction": {
+      "title": "AI Crop Prediction",
+      "description": "Get accurate predictions for the best crops to grow based on soil, weather, and market conditions."
+    },
+    "analytics": {
+      "title": "Smart Analytics",
+      "description": "Visualize your farm data with intuitive charts and insights to make better decisions."
+    },
+    "marketplace": {
+      "title": "Farm Marketplace",
+      "description": "Buy seeds, fertilizers, and equipment at competitive prices from trusted sellers."
+    },
+    "weather": {
+      "title": "Weather Insights",
+      "description": "Get hyperlocal weather forecasts and alerts to protect your crops."
+    }
+  },
+  "stats": {
+    "farmers": "Active Farmers",
+    "predictions": "Predictions Made",
+    "accuracy": "Accuracy Rate",
+    "states": "States Covered"
+  },
+  "testimonials": {
+    "title": "What Farmers Say",
+    "subtitle": "Real stories from farmers who have benefited from AgroSmart"
+  },
+  "cta": {
+    "title": "Ready to Transform Your Farm?",
+    "subtitle": "Join thousands of farmers who are already using AgroSmart to increase their yields and income.",
+    "button": "Start Free Trial"
+  },
+  "footer": {
+    "description": "Empowering farmers with AI-driven insights for smarter, more sustainable agriculture.",
+    "product": "Product",
+    "company": "Company",
+    "support": "Support",
+    "legal": "Legal",
+    "newsletter": "Newsletter",
+    "newsletterSubtitle": "Get farming tips and updates",
+    "emailPlaceholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "copyright": "© 2024 AgroSmart. All rights reserved."
+  },
+  "shop": {
+    "title": "Farm Shop",
+    "subtitle": "Quality seeds, fertilizers, and equipment for your farm",
+    "searchPlaceholder": "Search products...",
+    "allCategories": "All Categories",
+    "addToCart": "Add to Cart",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "continueShopping": "Continue Shopping",
+    "total": "Total",
+    "checkout": "Checkout"
+  },
+  "chatbot": {
+    "title": "AgroSmart Assistant",
+    "placeholder": "Ask me anything about farming...",
+    "send": "Send",
+    "greeting": "Hello! I'm your AgroSmart assistant. How can I help you today?"
+  },
+  "voice": {
+    "listening": "Listening...",
+    "speak": "Speak a command",
+    "commands": {
+      "goHome": "Go to home",
+      "goShop": "Go to shop",
+      "goPrediction": "Go to prediction",
+      "goAnalytics": "Go to analytics",
+      "goCart": "Go to cart",
+      "goContact": "Go to contact"
+    }
+  },
+  "language": {
+    "select": "Select Language"
+  }
+}

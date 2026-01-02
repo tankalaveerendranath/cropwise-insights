@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "prediction": "Prédiction",
+    "analytics": "Analyses",
+    "history": "Historique",
+    "shop": "Boutique",
+    "orders": "Commandes",
+    "contact": "Contact",
+    "admin": "Admin",
+    "login": "Connexion",
+    "signup": "Inscription",
+    "logout": "Déconnexion"
+  },
+  "hero": {
+    "title": "Agriculture Intelligente pour un",
+    "titleHighlight": "Meilleur Avenir",
+    "subtitle": "Exploitez la puissance de l'IA et de l'analyse de données pour optimiser vos rendements, prédire les récoltes et prendre des décisions agricoles éclairées.",
+    "getStarted": "Commencer",
+    "learnMore": "En Savoir Plus",
+    "trustedBy": "Approuvé par plus de 10 000 agriculteurs en Inde"
+  },
+  "features": {
+    "title": "Pourquoi choisir AgroSmart?",
+    "subtitle": "Des outils puissants conçus spécifiquement pour les agriculteurs modernes",
+    "prediction": {
+      "title": "Prédiction de Cultures par IA",
+      "description": "Obtenez des prédictions précises pour les meilleures cultures basées sur le sol, la météo et les conditions du marché."
+    },
+    "analytics": {
+      "title": "Analyses Intelligentes",
+      "description": "Visualisez les données de votre ferme avec des graphiques intuitifs pour prendre de meilleures décisions."
+    },
+    "marketplace": {
+      "title": "Marché Agricole",
+      "description": "Achetez des semences, engrais et équipements à des prix compétitifs auprès de vendeurs de confiance."
+    },
+    "weather": {
+      "title": "Informations Météo",
+      "description": "Obtenez des prévisions météo hyperlocales et des alertes pour protéger vos cultures."
+    }
+  },
+  "stats": {
+    "farmers": "Agriculteurs Actifs",
+    "predictions": "Prédictions Effectuées",
+    "accuracy": "Taux de Précision",
+    "states": "États Couverts"
+  },
+  "testimonials": {
+    "title": "Ce que disent les agriculteurs",
+    "subtitle": "Histoires réelles d'agriculteurs qui ont bénéficié d'AgroSmart"
+  },
+  "cta": {
+    "title": "Prêt à transformer votre ferme?",
+    "subtitle": "Rejoignez des milliers d'agriculteurs qui utilisent déjà AgroSmart pour augmenter leurs rendements et revenus.",
+    "button": "Essai Gratuit"
+  },
+  "footer": {
+    "description": "Autonomiser les agriculteurs avec des insights basés sur l'IA pour une agriculture plus intelligente et durable.",
+    "product": "Produit",
+    "company": "Entreprise",
+    "support": "Support",
+    "legal": "Légal",
+    "newsletter": "Newsletter",
+    "newsletterSubtitle": "Recevez des conseils et mises à jour agricoles",
+    "emailPlaceholder": "Entrez votre email",
+    "subscribe": "S'abonner",
+    "copyright": "© 2024 AgroSmart. Tous droits réservés."
+  },
+  "shop": {
+    "title": "Boutique Agricole",
+    "subtitle": "Semences, engrais et équipements de qualité pour votre ferme",
+    "searchPlaceholder": "Rechercher des produits...",
+    "allCategories": "Toutes les Catégories",
+    "addToCart": "Ajouter au Panier",
+    "outOfStock": "Rupture de Stock",
+    "inStock": "En Stock"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide",
+    "continueShopping": "Continuer les Achats",
+    "total": "Total",
+    "checkout": "Commander"
+  },
+  "chatbot": {
+    "title": "Assistant AgroSmart",
+    "placeholder": "Posez-moi n'importe quelle question sur l'agriculture...",
+    "send": "Envoyer",
+    "greeting": "Bonjour! Je suis votre assistant AgroSmart. Comment puis-je vous aider aujourd'hui?"
+  },
+  "voice": {
+    "listening": "Écoute...",
+    "speak": "Dites une commande",
+    "commands": {
+      "goHome": "Aller à l'accueil",
+      "goShop": "Aller à la boutique",
+      "goPrediction": "Aller à la prédiction",
+      "goAnalytics": "Aller aux analyses",
+      "goCart": "Aller au panier",
+      "goContact": "Aller au contact"
+    }
+  },
+  "language": {
+    "select": "Choisir la Langue"
+  }
+}
