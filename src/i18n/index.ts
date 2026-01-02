@@ -12,6 +12,17 @@ import pt from './translations/pt.json';
 import de from './translations/de.json';
 import ja from './translations/ja.json';
 import ru from './translations/ru.json';
+import ko from './translations/ko.json';
+import it from './translations/it.json';
+import th from './translations/th.json';
+import vi from './translations/vi.json';
+import nl from './translations/nl.json';
+import tr from './translations/tr.json';
+import pl from './translations/pl.json';
+import id from './translations/id.json';
+import ms from './translations/ms.json';
+import uk from './translations/uk.json';
+import sv from './translations/sv.json';
 
 export const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -24,6 +35,17 @@ export const languages = [
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'ja', name: '日本語', flag: '🇯🇵' },
   { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+  { code: 'ko', name: '한국어', flag: '🇰🇷' },
+  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+  { code: 'th', name: 'ไทย', flag: '🇹🇭' },
+  { code: 'vi', name: 'Tiếng Việt', flag: '🇻🇳' },
+  { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
+  { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
+  { code: 'pl', name: 'Polski', flag: '🇵🇱' },
+  { code: 'id', name: 'Indonesia', flag: '🇮🇩' },
+  { code: 'ms', name: 'Bahasa Melayu', flag: '🇲🇾' },
+  { code: 'uk', name: 'Українська', flag: '🇺🇦' },
+  { code: 'sv', name: 'Svenska', flag: '🇸🇪' },
 ];
 
 i18n
@@ -41,6 +63,17 @@ i18n
       de: { translation: de },
       ja: { translation: ja },
       ru: { translation: ru },
+      ko: { translation: ko },
+      it: { translation: it },
+      th: { translation: th },
+      vi: { translation: vi },
+      nl: { translation: nl },
+      tr: { translation: tr },
+      pl: { translation: pl },
+      id: { translation: id },
+      ms: { translation: ms },
+      uk: { translation: uk },
+      sv: { translation: sv },
     },
     fallbackLng: 'en',
     interpolation: {

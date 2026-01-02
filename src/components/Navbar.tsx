@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
 import ThemeToggle from './ThemeToggle';
+import LanguageSelector from './LanguageSelector';
 
 interface NavbarProps {
   isAuthenticated: boolean;
@@ -61,6 +62,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout, isAdmin = fa
 
           {/* Right Section */}
           <div className="flex items-center gap-2">
+            <LanguageSelector />
             <ThemeToggle />
             
             {isAuthenticated && (

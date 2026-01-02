@@ -1,0 +1,77 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "prediction": "Mahsul Tahmini",
+    "analytics": "Analiz",
+    "shop": "Mağaza",
+    "cart": "Sepet",
+    "orders": "Siparişler",
+    "contact": "İletişim",
+    "login": "Giriş Yap",
+    "logout": "Çıkış Yap",
+    "getStarted": "Başla"
+  },
+  "hero": {
+    "title": "Yapay Zeka ile Tarımın Geleceği",
+    "subtitle": "AgroSmart'ın veri odaklı içgörüleriyle daha akıllı çiftçilik yapın ve daha fazla hasat edin",
+    "cta": "Hemen Başla",
+    "learnMore": "Daha Fazla Bilgi"
+  },
+  "features": {
+    "title": "Akıllı Tarım Çözümleri",
+    "prediction": "AI Mahsul Tahmini",
+    "predictionDesc": "Optimal mahsulleri tahmin etmek için makine öğrenimi kullanın",
+    "analytics": "Gerçek Zamanlı Analiz",
+    "analyticsDesc": "Detaylı analizlerle çiftlik performansınızı izleyin",
+    "marketplace": "Tarım Pazarı",
+    "marketplaceDesc": "Kaliteli tohum ve malzeme satın alın"
+  },
+  "shop": {
+    "title": "Tarım Mağazası",
+    "addToCart": "Sepete Ekle",
+    "outOfStock": "Stokta Yok",
+    "categories": "Kategoriler",
+    "all": "Tümü"
+  },
+  "cart": {
+    "title": "Sepetiniz",
+    "empty": "Sepetiniz boş",
+    "total": "Toplam",
+    "checkout": "Ödeme Yap",
+    "remove": "Kaldır"
+  },
+  "prediction": {
+    "title": "Mahsul Tahmini",
+    "analyze": "Analiz Et",
+    "result": "Önerilen Mahsul",
+    "confidence": "Güven"
+  },
+  "contact": {
+    "title": "Bize Ulaşın",
+    "name": "İsim",
+    "email": "E-posta",
+    "message": "Mesaj",
+    "send": "Mesaj Gönder"
+  },
+  "voice": {
+    "title": "Sesli Asistan",
+    "listening": "Dinleniyor...",
+    "command": "Sesli Komut",
+    "navigating": "Yönlendiriliyor:",
+    "notRecognized": "Komut tanınmadı",
+    "tryAgain": "Şunu deneyin: \"Mağazaya git\" veya \"Sepeti aç\"",
+    "notSupported": "Ses desteklenmiyor",
+    "browserNotSupported": "Tarayıcınız ses tanımayı desteklemiyor",
+    "error": "Hata",
+    "errorMessage": "Ses tanıma başarısız. Lütfen tekrar deneyin."
+  },
+  "chatbot": {
+    "title": "AgroSmart Asistan",
+    "placeholder": "Tarım hakkında bir şey sorun...",
+    "send": "Gönder",
+    "greeting": "Merhaba! Ben AgroSmart asistanıyım. Bugün tarım konusunda size nasıl yardımcı olabilirim?"
+  },
+  "footer": {
+    "rights": "Tüm hakları saklıdır"
+  }
+}
