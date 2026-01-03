@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import ProductCard from '@/components/ProductCard';
 import Footer from '@/components/Footer';
 import { Search, SlidersHorizontal, ShoppingBag, Loader2 } from 'lucide-react';
@@ -8,11 +10,20 @@ import { supabase } from '@/integrations/supabase/client';
 import { Product } from '@/types';
 
 const Shop: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>(['All']);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const searchFromUrl = searchParams.get('search');
+    if (searchFromUrl) {
+      setSearchQuery(searchFromUrl);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     fetchProducts();
@@ -68,13 +79,13 @@ const Shop: React.FC = () => {
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur-sm rounded-full px-4 py-2 mb-4">
             <ShoppingBag className="w-4 h-4 text-secondary" />
-            <span className="text-sm font-medium text-primary-foreground">Agricultural Marketplace</span>
+            <span className="text-sm font-medium text-primary-foreground">{t('shop.badge')}</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-            Shop Quality Agri Products
+            {t('shop.title')}
           </h1>
           <p className="text-primary-foreground/80 max-w-2xl mx-auto">
-            Premium seeds, fertilizers, equipment, and more—delivered right to your farm.
+            {t('shop.subtitle')}
           </p>
         </div>
       </section>
@@ -88,7 +99,7 @@ const Shop: React.FC = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search products..."
+                placeholder={t('shop.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-11"
@@ -104,7 +115,7 @@ const Shop: React.FC = () => {
                   size="sm"
                   onClick={() => setSelectedCategory(category)}
                 >
-                  {category}
+                  {category === 'All' ? t('shop.allCategories') : category}
                 </Button>
               ))}
             </div>
@@ -122,7 +133,7 @@ const Shop: React.FC = () => {
           ) : filteredProducts.length > 0 ? (
             <>
               <p className="text-muted-foreground mb-6">
-                Showing {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
+                {t('shop.showing')} {filteredProducts.length} {t('shop.products')}
               </p>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredProducts.map(product => (
@@ -133,9 +144,9 @@ const Shop: React.FC = () => {
           ) : (
             <div className="text-center py-16">
               <SlidersHorizontal className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-foreground mb-2">No products found</h3>
+              <h3 className="text-xl font-semibold text-foreground mb-2">{t('shop.noProducts')}</h3>
               <p className="text-muted-foreground">
-                Try adjusting your search or filter criteria
+                {t('shop.adjustFilters')}
               </p>
             </div>
           )}

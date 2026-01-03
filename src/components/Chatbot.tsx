@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MessageCircle, X, Send, Bot, User, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, Loader2, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
+import { useTextToSpeech } from '@/hooks/use-text-to-speech';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -12,18 +13,24 @@ interface Message {
 }
 
 const Chatbot = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { speak, stop, isSpeaking } = useTextToSpeech();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [ttsEnabled, setTtsEnabled] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      setMessages([{ role: 'assistant', content: t('chatbot.greeting') }]);
+      const greeting = t('chatbot.greeting');
+      setMessages([{ role: 'assistant', content: greeting }]);
+      if (ttsEnabled) {
+        speak(greeting);
+      }
     }
-  }, [isOpen, t, messages.length]);
+  }, [isOpen, t, messages.length, speak, ttsEnabled]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -39,21 +46,39 @@ const Chatbot = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('chatbot', {
-        body: { message: userMessage, history: messages },
+        body: { message: userMessage, history: messages, language: i18n.language },
       });
 
       if (error) throw error;
 
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.response }]);
+      const assistantResponse = data.response;
+      setMessages((prev) => [...prev, { role: 'assistant', content: assistantResponse }]);
+      
+      if (ttsEnabled) {
+        speak(assistantResponse);
+      }
     } catch (error) {
       console.error('Chatbot error:', error);
+      const errorMessage = t('chatbot.error');
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' },
+        { role: 'assistant', content: errorMessage },
       ]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const toggleTts = () => {
+    if (isSpeaking) {
+      stop();
+    }
+    setTtsEnabled(!ttsEnabled);
+  };
+
+  const handleClose = () => {
+    stop();
+    setIsOpen(false);
   };
 
   return (
@@ -69,13 +94,34 @@ const Chatbot = () => {
       {isOpen && (
         <div className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 bg-card border border-border rounded-2xl shadow-2xl animate-fade-in overflow-hidden">
           <div className="gradient-hero p-4 text-primary-foreground">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                <Bot className="h-5 w-5" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <Bot className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">{t('chatbot.title')}</h3>
+                  <p className="text-xs opacity-80">{t('chatbot.online')}</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold">{t('chatbot.title')}</h3>
-                <p className="text-xs opacity-80">Online</p>
+              <div className="flex items-center gap-2">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 text-primary-foreground hover:bg-white/20"
+                  onClick={toggleTts}
+                  title={ttsEnabled ? t('chatbot.disableTts') : t('chatbot.enableTts')}
+                >
+                  {ttsEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 text-primary-foreground hover:bg-white/20"
+                  onClick={handleClose}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </div>
