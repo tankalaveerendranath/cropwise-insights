@@ -1,107 +1,99 @@
 {
   "nav": {
     "home": "Inicio",
-    "prediction": "Predicción",
+    "prediction": "Predicción de Cultivos",
     "analytics": "Análisis",
     "history": "Historial",
     "shop": "Tienda",
-    "orders": "Pedidos",
+    "orders": "Mis Pedidos",
     "contact": "Contacto",
     "admin": "Admin",
     "login": "Iniciar Sesión",
-    "signup": "Registrarse",
-    "logout": "Cerrar Sesión"
+    "signup": "Comenzar",
+    "logout": "Cerrar Sesión",
+    "cart": "Carrito"
   },
   "hero": {
+    "badge": "Agricultura con IA",
     "title": "Agricultura Inteligente para un",
-    "titleHighlight": "Mañana Mejor",
-    "subtitle": "Aprovecha el poder de la IA y el análisis de datos para optimizar tus rendimientos, predecir cosechas y tomar decisiones agrícolas informadas.",
-    "getStarted": "Comenzar",
-    "learnMore": "Saber Más",
-    "trustedBy": "Confiado por más de 10,000 agricultores en India"
+    "titleHighlight": "Futuro Sostenible",
+    "subtitle": "Aprovecha las predicciones de cultivos con IA, análisis en tiempo real y acceso a productos agrícolas de calidad—todo en una plataforma.",
+    "getStarted": "Comenzar Gratis",
+    "tryPrediction": "Probar Predicción",
+    "scrollToExplore": "Desplaza para explorar"
   },
   "features": {
-    "title": "¿Por qué elegir AgroSmart?",
-    "subtitle": "Herramientas poderosas diseñadas específicamente para agricultores modernos",
-    "prediction": {
-      "title": "Predicción de Cultivos con IA",
-      "description": "Obtén predicciones precisas para los mejores cultivos basados en suelo, clima y condiciones del mercado."
-    },
-    "analytics": {
-      "title": "Análisis Inteligente",
-      "description": "Visualiza los datos de tu granja con gráficos intuitivos para tomar mejores decisiones."
-    },
-    "marketplace": {
-      "title": "Mercado Agrícola",
-      "description": "Compra semillas, fertilizantes y equipos a precios competitivos de vendedores confiables."
-    },
-    "weather": {
-      "title": "Información Meteorológica",
-      "description": "Obtén pronósticos del tiempo hiperlocales y alertas para proteger tus cultivos."
-    }
-  },
-  "stats": {
-    "farmers": "Agricultores Activos",
-    "predictions": "Predicciones Realizadas",
-    "accuracy": "Tasa de Precisión",
-    "states": "Estados Cubiertos"
-  },
-  "testimonials": {
-    "title": "Lo que dicen los agricultores",
-    "subtitle": "Historias reales de agricultores que se han beneficiado de AgroSmart"
-  },
-  "cta": {
-    "title": "¿Listo para transformar tu granja?",
-    "subtitle": "Únete a miles de agricultores que ya usan AgroSmart para aumentar sus rendimientos e ingresos.",
-    "button": "Prueba Gratuita"
-  },
-  "footer": {
-    "description": "Empoderando a los agricultores con información impulsada por IA para una agricultura más inteligente y sostenible.",
-    "product": "Producto",
-    "company": "Empresa",
-    "support": "Soporte",
-    "legal": "Legal",
-    "newsletter": "Boletín",
-    "newsletterSubtitle": "Recibe consejos y actualizaciones agrícolas",
-    "emailPlaceholder": "Ingresa tu email",
-    "subscribe": "Suscribirse",
-    "copyright": "© 2024 AgroSmart. Todos los derechos reservados."
+    "title": "Todo lo que Necesitas para",
+    "titleHighlight": "Agricultura Inteligente",
+    "subtitle": "Herramientas completas para maximizar tu éxito agrícola",
+    "aiPrediction": "Predicción con IA",
+    "aiPredictionDesc": "Obtén recomendaciones precisas basadas en condiciones del suelo, clima y datos históricos.",
+    "analytics": "Análisis Power BI",
+    "analyticsDesc": "Visualiza tendencias, precios de mercado y patrones de rendimiento con dashboards interactivos.",
+    "ecommerce": "E-Commerce Agrícola",
+    "ecommerceDesc": "Compra semillas, fertilizantes, equipos y más a precios competitivos."
   },
   "shop": {
-    "title": "Tienda Agrícola",
-    "subtitle": "Semillas, fertilizantes y equipos de calidad para tu granja",
+    "badge": "Mercado Agrícola",
+    "title": "Compra Productos Agrícolas de Calidad",
+    "subtitle": "Semillas premium, fertilizantes, equipos y más—entregados a tu granja.",
     "searchPlaceholder": "Buscar productos...",
-    "allCategories": "Todas las Categorías",
+    "allCategories": "Todos",
+    "showing": "Mostrando",
+    "products": "productos",
+    "noProducts": "No se encontraron productos",
+    "adjustFilters": "Intenta ajustar tu búsqueda o filtros",
     "addToCart": "Añadir al Carrito",
-    "outOfStock": "Agotado",
-    "inStock": "En Stock"
+    "outOfStock": "Agotado"
   },
   "cart": {
     "title": "Carrito de Compras",
     "empty": "Tu carrito está vacío",
-    "continueShopping": "Continuar Comprando",
     "total": "Total",
-    "checkout": "Pagar"
+    "checkout": "Proceder al Pago",
+    "remove": "Eliminar"
   },
   "chatbot": {
     "title": "Asistente AgroSmart",
-    "placeholder": "Pregúntame cualquier cosa sobre agricultura...",
+    "online": "En línea",
+    "placeholder": "Pregúntame sobre agricultura...",
     "send": "Enviar",
-    "greeting": "¡Hola! Soy tu asistente AgroSmart. ¿Cómo puedo ayudarte hoy?"
+    "greeting": "¡Hola! Soy tu asistente AgroSmart. ¿Cómo puedo ayudarte hoy con tus necesidades agrícolas?",
+    "error": "Lo siento, ocurrió un error. Por favor intenta de nuevo.",
+    "enableTts": "Activar voz",
+    "disableTts": "Desactivar voz"
   },
   "voice": {
+    "title": "Asistente de Voz",
     "listening": "Escuchando...",
-    "speak": "Di un comando",
-    "commands": {
-      "goHome": "Ir a inicio",
-      "goShop": "Ir a tienda",
-      "goPrediction": "Ir a predicción",
-      "goAnalytics": "Ir a análisis",
-      "goCart": "Ir al carrito",
-      "goContact": "Ir a contacto"
-    }
+    "command": "Comando de Voz",
+    "navigating": "Navegando a",
+    "notRecognized": "Comando no reconocido",
+    "tryAgain": "Prueba: 'ir a tienda', 'añadir semillas al carrito', o 'buscar fertilizante'",
+    "tryCommands": "Prueba: 'ir a tienda', 'añadir al carrito', 'buscar...'",
+    "notSupported": "No Soportado",
+    "browserNotSupported": "Tu navegador no soporta reconocimiento de voz",
+    "error": "Error",
+    "errorMessage": "Reconocimiento de voz falló. Por favor intenta de nuevo.",
+    "success": "Éxito",
+    "productNotFound": "No se encontró: {{product}}",
+    "addedToCart": "{{product}} añadido al carrito",
+    "searchingFor": "Buscando {{query}}"
+  },
+  "footer": {
+    "description": "Empoderando a los agricultores con insights impulsados por IA.",
+    "copyright": "© 2024 AgroSmart. Todos los derechos reservados.",
+    "newsletter": "Boletín",
+    "newsletterSubtitle": "Recibe consejos y actualizaciones",
+    "emailPlaceholder": "Ingresa tu email",
+    "subscribe": "Suscribirse"
   },
   "language": {
-    "select": "Seleccionar Idioma"
+    "select": "Seleccionar Idioma",
+    "current": "Actual"
+  },
+  "benefits": {
+    "title": "¿Por qué elegir",
+    "titleHighlight": "AgroSmart"
   }
 }

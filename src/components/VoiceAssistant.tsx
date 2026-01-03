@@ -1,9 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Mic, MicOff, X } from 'lucide-react';
+import { Mic, MicOff, X, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
+import { useCart } from '@/contexts/CartContext';
+import { useTextToSpeech } from '@/hooks/use-text-to-speech';
+import { supabase } from '@/integrations/supabase/client';
 
 // Extend Window interface for SpeechRecognition
 interface SpeechRecognitionEvent extends Event {
@@ -51,6 +54,8 @@ declare global {
 const VoiceAssistant = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { speak, isSpeaking } = useTextToSpeech();
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [recognition, setRecognition] = useState<ISpeechRecognition | null>(null);
@@ -61,60 +66,180 @@ const VoiceAssistant = () => {
       const recognitionInstance = new SpeechRecognitionClass();
       recognitionInstance.continuous = false;
       recognitionInstance.interimResults = true;
-      recognitionInstance.lang = i18n.language || 'en-US';
+      
+      // Map language codes to speech recognition language codes
+      const langMap: { [key: string]: string } = {
+        en: 'en-US',
+        hi: 'hi-IN',
+        es: 'es-ES',
+        fr: 'fr-FR',
+        zh: 'zh-CN',
+        ar: 'ar-SA',
+        pt: 'pt-BR',
+        de: 'de-DE',
+        ja: 'ja-JP',
+        ru: 'ru-RU',
+        ko: 'ko-KR',
+        it: 'it-IT',
+        th: 'th-TH',
+        vi: 'vi-VN',
+        nl: 'nl-NL',
+        tr: 'tr-TR',
+        pl: 'pl-PL',
+        id: 'id-ID',
+        ms: 'ms-MY',
+        uk: 'uk-UA',
+        sv: 'sv-SE',
+      };
+      
+      recognitionInstance.lang = langMap[i18n.language] || 'en-US';
       setRecognition(recognitionInstance);
     }
   }, [i18n.language]);
 
-  const processCommand = useCallback((command: string) => {
+  const searchAndAddToCart = async (productName: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .ilike('name', `%${productName}%`)
+        .eq('is_active', true)
+        .limit(1)
+        .single();
+
+      if (error || !data) {
+        const message = t('voice.productNotFound', { product: productName });
+        toast({ title: t('voice.error'), description: message, variant: 'destructive' });
+        speak(message);
+        return;
+      }
+
+      const product = {
+        id: data.id,
+        name: data.name,
+        description: data.description || '',
+        price: Number(data.price),
+        image: data.image_url || '',
+        category: data.category,
+        stock: data.stock,
+        unit: data.unit,
+      };
+
+      addToCart(product);
+      const message = t('voice.addedToCart', { product: data.name });
+      toast({ title: t('voice.success'), description: message });
+      speak(message);
+    } catch (err) {
+      console.error('Error searching product:', err);
+    }
+  };
+
+  const searchProducts = async (query: string) => {
+    navigate(`/shop?search=${encodeURIComponent(query)}`);
+    const message = t('voice.searchingFor', { query });
+    toast({ title: t('voice.command'), description: message });
+    speak(message);
+  };
+
+  const processCommand = useCallback(async (command: string) => {
     const lowerCommand = command.toLowerCase();
     
-    const commands: { [key: string]: string } = {
+    // Navigation commands
+    const navigationCommands: { [key: string]: string } = {
       'home': '/',
       'go home': '/',
       'go to home': '/',
+      'main page': '/',
       'shop': '/shop',
       'go shop': '/shop',
       'go to shop': '/shop',
       'store': '/shop',
+      'marketplace': '/shop',
       'prediction': '/predict',
       'go to prediction': '/predict',
       'predict': '/predict',
       'crop prediction': '/predict',
+      'predict crop': '/predict',
       'analytics': '/analytics',
       'go to analytics': '/analytics',
+      'dashboard': '/analytics',
       'cart': '/cart',
       'go to cart': '/cart',
       'shopping cart': '/cart',
+      'view cart': '/cart',
+      'open cart': '/cart',
+      'my cart': '/cart',
+      'checkout': '/cart',
       'contact': '/contact',
       'go to contact': '/contact',
+      'contact us': '/contact',
       'orders': '/orders',
       'my orders': '/orders',
+      'order status': '/orders',
+      'check orders': '/orders',
+      'check my orders': '/orders',
+      'order history': '/orders',
       'login': '/auth',
       'sign in': '/auth',
       'sign up': '/auth',
+      'register': '/auth',
       'history': '/history',
       'prediction history': '/history',
     };
 
-    for (const [phrase, path] of Object.entries(commands)) {
+    // Check navigation commands
+    for (const [phrase, path] of Object.entries(navigationCommands)) {
       if (lowerCommand.includes(phrase)) {
         navigate(path);
-        toast({
-          title: t('voice.command'),
-          description: `${t('voice.navigating')} ${phrase}`,
-        });
+        const message = `${t('voice.navigating')} ${phrase}`;
+        toast({ title: t('voice.command'), description: message });
+        speak(message);
         return true;
       }
     }
 
+    // Add to cart command: "add wheat seeds to cart" or "add to cart wheat"
+    const addToCartPatterns = [
+      /add (.+) to (?:the )?cart/i,
+      /add to cart (.+)/i,
+      /put (.+) in (?:the )?cart/i,
+      /buy (.+)/i,
+    ];
+    
+    for (const pattern of addToCartPatterns) {
+      const match = lowerCommand.match(pattern);
+      if (match && match[1]) {
+        await searchAndAddToCart(match[1].trim());
+        return true;
+      }
+    }
+
+    // Search command: "search for wheat seeds" or "find fertilizer"
+    const searchPatterns = [
+      /search (?:for )?(.+)/i,
+      /find (.+)/i,
+      /look for (.+)/i,
+      /show me (.+)/i,
+    ];
+
+    for (const pattern of searchPatterns) {
+      const match = lowerCommand.match(pattern);
+      if (match && match[1]) {
+        await searchProducts(match[1].trim());
+        return true;
+      }
+    }
+
+    // Command not recognized
+    const message = t('voice.tryAgain');
     toast({
       title: t('voice.notRecognized'),
-      description: t('voice.tryAgain'),
+      description: message,
       variant: "destructive",
     });
+    speak(t('voice.notRecognized') + '. ' + message);
     return false;
-  }, [navigate, t]);
+  }, [navigate, t, speak, addToCart]);
 
   const startListening = () => {
     if (!recognition) {
@@ -123,6 +248,7 @@ const VoiceAssistant = () => {
         description: t('voice.browserNotSupported'),
         variant: "destructive",
       });
+      speak(t('voice.browserNotSupported'));
       return;
     }
 
@@ -151,6 +277,7 @@ const VoiceAssistant = () => {
     recognition.start();
     setIsListening(true);
     setTranscript('');
+    speak(t('voice.listening'));
   };
 
   const stopListening = () => {
@@ -173,7 +300,10 @@ const VoiceAssistant = () => {
       {isListening && (
         <div className="fixed bottom-40 right-6 z-50 bg-card border border-border rounded-lg p-4 shadow-xl max-w-xs animate-fade-in">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-primary">{t('voice.listening')}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-primary">{t('voice.listening')}</span>
+              {isSpeaking && <Volume2 className="h-4 w-4 text-primary animate-pulse" />}
+            </div>
             <Button size="icon" variant="ghost" className="h-6 w-6" onClick={stopListening}>
               <X className="h-4 w-4" />
             </Button>
@@ -195,6 +325,9 @@ const VoiceAssistant = () => {
           {transcript && (
             <p className="text-sm text-muted-foreground italic">"{transcript}"</p>
           )}
+          <p className="text-xs text-muted-foreground mt-2">
+            {t('voice.tryCommands')}
+          </p>
         </div>
       )}
     </>

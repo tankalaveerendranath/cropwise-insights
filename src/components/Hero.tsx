@@ -1,11 +1,13 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, BarChart3, ShoppingBag, Leaf, Sparkles } from 'lucide-react';
 import heroImage from '@/assets/hero-farm.jpg';
 import { useScrollY } from '@/hooks/use-parallax';
 
 const Hero: React.FC = () => {
+  const { t } = useTranslation();
   const scrollY = useScrollY();
   const parallaxOffset = scrollY * 0.4;
   const contentOffset = scrollY * 0.15;
@@ -40,31 +42,31 @@ const Hero: React.FC = () => {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-card/90 backdrop-blur-sm rounded-full px-4 py-2 mb-6 animate-fade-in">
             <Sparkles className="w-4 h-4 text-secondary" />
-            <span className="text-sm font-medium text-foreground">AI-Powered Agriculture</span>
+            <span className="text-sm font-medium text-foreground">{t('hero.badge')}</span>
           </div>
 
           {/* Heading */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 leading-tight animate-slide-up">
-            Smart Farming for a
-            <span className="block text-secondary">Sustainable Future</span>
+            {t('hero.title')}
+            <span className="block text-secondary">{t('hero.titleHighlight')}</span>
           </h1>
 
           {/* Description */}
           <p className="text-lg md:text-xl text-primary-foreground/80 mb-8 max-w-xl animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            Leverage AI-powered crop predictions, real-time analytics, and access quality agricultural products—all in one platform.
+            {t('hero.subtitle')}
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 mb-12 animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <Link to="/auth?mode=signup">
               <Button variant="gold" size="xl" className="gap-2">
-                Get Started Free
+                {t('hero.getStarted')}
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </Link>
             <Link to="/predict">
               <Button variant="outline" size="xl" className="bg-card/20 backdrop-blur-sm border-primary-foreground/30 text-primary-foreground hover:bg-card/40 hover:text-primary-foreground">
-                Try Prediction
+                {t('hero.tryPrediction')}
               </Button>
             </Link>
           </div>
@@ -72,12 +74,12 @@ const Hero: React.FC = () => {
           {/* Feature Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-slide-up" style={{ animationDelay: '0.3s' }}>
             {[
-              { icon: BarChart3, title: 'Crop Prediction', desc: 'AI-based recommendations' },
-              { icon: Leaf, title: 'Analytics', desc: 'Power BI insights' },
-              { icon: ShoppingBag, title: 'E-Commerce', desc: 'Quality agri products' },
+              { icon: BarChart3, title: t('features.aiPrediction'), desc: t('features.aiPredictionDesc').slice(0, 30) + '...' },
+              { icon: Leaf, title: t('features.analytics'), desc: t('features.analyticsDesc').slice(0, 30) + '...' },
+              { icon: ShoppingBag, title: t('features.ecommerce'), desc: t('features.ecommerceDesc').slice(0, 30) + '...' },
             ].map(({ icon: Icon, title, desc }, index) => (
               <div
-                key={title}
+                key={index}
                 className="bg-card/20 backdrop-blur-sm rounded-xl p-4 border border-primary-foreground/10 hover:bg-card/30 transition-all duration-300 hover:-translate-y-1"
                 style={{ animationDelay: `${0.4 + index * 0.1}s` }}
               >
@@ -105,7 +107,7 @@ const Hero: React.FC = () => {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-opacity duration-300"
         style={{ opacity: opacityFade }}
       >
-        <span className="text-primary-foreground/60 text-sm">Scroll to explore</span>
+        <span className="text-primary-foreground/60 text-sm">{t('hero.scrollToExplore')}</span>
         <div className="w-6 h-10 rounded-full border-2 border-primary-foreground/40 flex justify-center pt-2">
           <div className="w-1.5 h-3 bg-primary-foreground/60 rounded-full animate-bounce" />
         </div>

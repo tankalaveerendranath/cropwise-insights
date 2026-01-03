@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Leaf, ShoppingCart, User, Menu, X, BarChart3, Store, Package, Shield, History, Phone } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Leaf, ShoppingCart, Menu, X, BarChart3, Store, Package, Shield, History, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
@@ -14,20 +15,20 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout, isAdmin = false }) => {
+  const { t } = useTranslation();
   const location = useLocation();
-  const navigate = useNavigate();
   const { totalItems } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { path: '/', label: 'Home', icon: Leaf },
-    { path: '/predict', label: 'Crop Prediction', icon: BarChart3 },
-    { path: '/analytics', label: 'Analytics', icon: BarChart3 },
-    { path: '/shop', label: 'Shop', icon: Store },
-    ...(isAuthenticated ? [{ path: '/history', label: 'History', icon: History }] : []),
-    ...(isAuthenticated ? [{ path: '/orders', label: 'My Orders', icon: Package }] : []),
-    ...(isAdmin ? [{ path: '/admin', label: 'Admin', icon: Shield }] : []),
-    { path: '/contact', label: 'Contact Us', icon: Phone },
+    { path: '/', label: t('nav.home'), icon: Leaf },
+    { path: '/predict', label: t('nav.prediction'), icon: BarChart3 },
+    { path: '/analytics', label: t('nav.analytics'), icon: BarChart3 },
+    { path: '/shop', label: t('nav.shop'), icon: Store },
+    ...(isAuthenticated ? [{ path: '/history', label: t('nav.history'), icon: History }] : []),
+    ...(isAuthenticated ? [{ path: '/orders', label: t('nav.orders'), icon: Package }] : []),
+    ...(isAdmin ? [{ path: '/admin', label: t('nav.admin'), icon: Shield }] : []),
+    { path: '/contact', label: t('nav.contact'), icon: Phone },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -81,19 +82,19 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout, isAdmin = fa
             {isAuthenticated ? (
               <div className="hidden md:flex items-center gap-2">
                 <Button variant="outline" size="sm" onClick={onLogout}>
-                  Logout
+                  {t('nav.logout')}
                 </Button>
               </div>
             ) : (
               <div className="hidden md:flex items-center gap-2">
                 <Link to="/auth">
                   <Button variant="ghost" size="sm">
-                    Sign In
+                    {t('nav.login')}
                   </Button>
                 </Link>
                 <Link to="/auth?mode=signup">
                   <Button variant="hero" size="sm">
-                    Get Started
+                    {t('nav.signup')}
                   </Button>
                 </Link>
               </div>
@@ -133,18 +134,18 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, onLogout, isAdmin = fa
               <div className="border-t border-border pt-2 mt-2">
                 {isAuthenticated ? (
                   <Button variant="outline" className="w-full" onClick={onLogout}>
-                    Logout
+                    {t('nav.logout')}
                   </Button>
                 ) : (
                   <div className="flex flex-col gap-2">
                     <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="ghost" className="w-full">
-                        Sign In
+                        {t('nav.login')}
                       </Button>
                     </Link>
                     <Link to="/auth?mode=signup" onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="hero" className="w-full">
-                        Get Started
+                        {t('nav.signup')}
                       </Button>
                     </Link>
                   </div>
