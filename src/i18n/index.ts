@@ -4,6 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import en from './translations/en.json';
 import hi from './translations/hi.json';
+import te from './translations/te.json';
 import es from './translations/es.json';
 import fr from './translations/fr.json';
 import zh from './translations/zh.json';
@@ -27,6 +28,7 @@ import sv from './translations/sv.json';
 export const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+  { code: 'te', name: 'తెలుగు', flag: '🇮🇳' },
   { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'zh', name: '中文', flag: '🇨🇳' },
@@ -55,6 +57,7 @@ i18n
     resources: {
       en: { translation: en },
       hi: { translation: hi },
+      te: { translation: te },
       es: { translation: es },
       fr: { translation: fr },
       zh: { translation: zh },
