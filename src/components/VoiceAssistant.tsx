@@ -77,6 +77,54 @@ const multiLangCommands: { [lang: string]: { [key: string]: string[] } } = {
     contact: ['संपर्क', 'हमसे संपर्क करें'],
     login: ['लॉगिन', 'साइन इन'],
   },
+  te: {
+    home: ['హోమ్', 'ముఖ్య పేజీ', 'హోమ్‌కు వెళ్లండి'],
+    shop: ['షాప్', 'స్టోర్', 'దుకాణం', 'షాప్‌కు వెళ్లండి'],
+    cart: ['కార్ట్', 'నా కార్ట్', 'బుట్ట'],
+    checkout: ['చెకౌట్', 'చెకౌట్‌కు వెళ్లండి', 'చెల్లింపు', 'ఆర్డర్ పెట్టు'],
+    clearCart: ['కార్ట్ ఖాళీ చేయండి', 'కార్ట్ క్లియర్', 'అన్నీ తొలగించండి'],
+    orders: ['ఆర్డర్లు', 'నా ఆర్డర్లు', 'ఆర్డర్ స్థితి'],
+    prediction: ['అంచనా', 'పంట అంచనా'],
+    analytics: ['విశ్లేషణ', 'డ్యాష్‌బోర్డ్'],
+    contact: ['సంప్రదించండి'],
+    login: ['లాగిన్', 'సైన్ ఇన్'],
+  },
+  it: {
+    home: ['home', 'pagina principale', 'vai alla home'],
+    shop: ['negozio', 'shop', 'vai al negozio'],
+    cart: ['carrello', 'il mio carrello', 'apri carrello'],
+    checkout: ['checkout', 'vai alla cassa', 'procedi al checkout', 'paga'],
+    clearCart: ['svuota carrello', 'pulisci carrello', 'rimuovi tutto'],
+    orders: ['ordini', 'i miei ordini', 'stato ordine'],
+    prediction: ['previsione', 'previsione raccolto'],
+    analytics: ['analisi', 'dashboard'],
+    contact: ['contatto', 'contattaci'],
+    login: ['accedi', 'login', 'registrati'],
+  },
+  th: {
+    home: ['หน้าแรก', 'กลับหน้าแรก'],
+    shop: ['ร้านค้า', 'ไปที่ร้านค้า', 'ช้อปปิ้ง'],
+    cart: ['ตะกร้า', 'ตะกร้าสินค้า', 'ตะกร้าของฉัน'],
+    checkout: ['ชำระเงิน', 'ไปชำระเงิน', 'เช็คเอาท์'],
+    clearCart: ['ล้างตะกร้า', 'เคลียร์ตะกร้า', 'ลบทั้งหมด'],
+    orders: ['คำสั่งซื้อ', 'คำสั่งซื้อของฉัน', 'สถานะคำสั่งซื้อ'],
+    prediction: ['พยากรณ์', 'พยากรณ์พืชผล'],
+    analytics: ['การวิเคราะห์', 'แดชบอร์ด'],
+    contact: ['ติดต่อ', 'ติดต่อเรา'],
+    login: ['เข้าสู่ระบบ', 'ลงชื่อเข้าใช้'],
+  },
+  vi: {
+    home: ['trang chủ', 'về trang chủ'],
+    shop: ['cửa hàng', 'đi đến cửa hàng', 'mua sắm'],
+    cart: ['giỏ hàng', 'mở giỏ hàng', 'giỏ của tôi'],
+    checkout: ['thanh toán', 'đi thanh toán', 'checkout'],
+    clearCart: ['xóa giỏ hàng', 'làm trống giỏ', 'xóa tất cả'],
+    orders: ['đơn hàng', 'đơn hàng của tôi', 'trạng thái đơn hàng'],
+    prediction: ['dự đoán', 'dự đoán cây trồng'],
+    analytics: ['phân tích', 'bảng điều khiển'],
+    contact: ['liên hệ', 'liên hệ chúng tôi'],
+    login: ['đăng nhập', 'đăng ký'],
+  },
   es: {
     home: ['inicio', 'página principal', 'ir a inicio'],
     shop: ['tienda', 'comprar', 'ir a tienda'],
@@ -193,7 +241,7 @@ const VoiceAssistant = () => {
       
       // Map language codes to speech recognition language codes
       const langMap: { [key: string]: string } = {
-        en: 'en-US', hi: 'hi-IN', es: 'es-ES', fr: 'fr-FR', zh: 'zh-CN',
+        en: 'en-US', hi: 'hi-IN', te: 'te-IN', es: 'es-ES', fr: 'fr-FR', zh: 'zh-CN',
         ar: 'ar-SA', pt: 'pt-BR', de: 'de-DE', ja: 'ja-JP', ru: 'ru-RU',
         ko: 'ko-KR', it: 'it-IT', th: 'th-TH', vi: 'vi-VN', nl: 'nl-NL',
         tr: 'tr-TR', pl: 'pl-PL', id: 'id-ID', ms: 'ms-MY', uk: 'uk-UA', sv: 'sv-SE',
@@ -356,6 +404,14 @@ const VoiceAssistant = () => {
       /(.+)を買う/i,
       /(.+) 장바구니에 추가/i,
       /(.+) 구매/i,
+      /aggiungi (.+) al carrello/i,
+      /compra (.+)/i,
+      /เพิ่ม (.+) ลง(?:ใน)?ตะกร้า/i,
+      /ซื้อ (.+)/i,
+      /thêm (.+) vào giỏ/i,
+      /mua (.+)/i,
+      /(.+) కార్ట్‌లో జోడించ/i,
+      /(.+) కొన/i,
     ];
     
     for (const pattern of addToCartPatterns) {
@@ -382,6 +438,14 @@ const VoiceAssistant = () => {
       /(.+)を探す/i,
       /(.+) 검색/i,
       /(.+) 찾기/i,
+      /cerca (.+)/i,
+      /trova (.+)/i,
+      /ค้นหา (.+)/i,
+      /หา (.+)/i,
+      /tìm (.+)/i,
+      /tìm kiếm (.+)/i,
+      /(.+) కోసం వెతక/i,
+      /(.+) వెతక/i,
     ];
 
     for (const pattern of searchPatterns) {

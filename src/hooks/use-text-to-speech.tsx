@@ -20,6 +20,7 @@ export const useTextToSpeech = () => {
     const langMap: { [key: string]: string } = {
       en: 'en-US',
       hi: 'hi-IN',
+      te: 'te-IN',
       es: 'es-ES',
       fr: 'fr-FR',
       zh: 'zh-CN',
