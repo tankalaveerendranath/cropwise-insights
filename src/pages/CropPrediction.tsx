@@ -19,6 +19,7 @@ interface PredictionResult {
   yield: number;
   confidence: number;
   marketRate: number;
+  pricePerHectare: number;
 }
 
 const CropPrediction: React.FC = () => {
@@ -65,12 +66,15 @@ const CropPrediction: React.FC = () => {
     const predictedYield = Math.round(baseYield + Math.random() * 500);
     const confidence = Math.round(75 + Math.random() * 20);
     const marketRate = marketRates[selectedCrop] || 2000;
+    // Calculate price per hectare (yield in kg/ha * price per quintal / 100)
+    const pricePerHectare = Math.round((predictedYield / 100) * marketRate);
 
     const predictionResult = {
       crop: selectedCrop,
       yield: predictedYield,
       confidence,
       marketRate,
+      pricePerHectare,
     };
 
     setPrediction(predictionResult);
@@ -111,7 +115,7 @@ const CropPrediction: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background pt-20">
+    <main className="min-h-screen bg-background pt-20 page-bg-pattern">
       {/* Header */}
       <section className="py-12 gradient-hero">
         <div className="container mx-auto px-4 text-center">
@@ -381,10 +385,16 @@ const CropPrediction: React.FC = () => {
                       <span className="text-muted-foreground">Market Rate (2024)</span>
                       <span className="font-semibold text-foreground">₹{prediction.marketRate.toLocaleString()}/quintal</span>
                     </div>
+                    <div className="flex justify-between items-center p-4 bg-primary/10 rounded-lg border-2 border-primary/30">
+                      <span className="text-foreground font-medium">💰 Price per Hectare</span>
+                      <span className="font-bold text-primary text-xl">
+                        ₹{prediction.pricePerHectare.toLocaleString()}/ha
+                      </span>
+                    </div>
                     <div className="flex justify-between items-center p-4 bg-muted rounded-lg">
-                      <span className="text-muted-foreground">Estimated Revenue</span>
-                      <span className="font-bold text-primary text-lg">
-                        ₹{((prediction.yield / 100) * prediction.marketRate).toLocaleString()}
+                      <span className="text-muted-foreground">Estimated Revenue (per ha)</span>
+                      <span className="font-bold text-secondary text-lg">
+                        ₹{prediction.pricePerHectare.toLocaleString()}
                       </span>
                     </div>
                   </div>

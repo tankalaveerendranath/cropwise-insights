@@ -235,3 +235,62 @@ iframe.goog-te-banner-frame,
 body {
   top: 0 !important;
 }
+
+/* Google Translate Widget Styling */
+.translate-widget .goog-te-gadget {
+  font-family: inherit !important;
+}
+
+.translate-widget .goog-te-gadget-simple {
+  background-color: transparent !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: var(--radius) !important;
+  padding: 4px 8px !important;
+}
+
+.translate-widget .goog-te-gadget-simple a {
+  color: hsl(var(--foreground)) !important;
+  text-decoration: none !important;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .flex {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]),
+[dir="rtl"] .gap-2,
+[dir="rtl"] .gap-4 {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* Page background patterns */
+.page-bg-pattern {
+  background-image: 
+    radial-gradient(circle at 20% 50%, hsl(var(--primary) / 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, hsl(var(--secondary) / 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, hsl(var(--accent) / 0.1) 0%, transparent 50%);
+}

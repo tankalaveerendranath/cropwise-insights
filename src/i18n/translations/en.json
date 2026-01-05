@@ -222,6 +222,19 @@
     "addedToCart": "Added {{product}} to cart",
     "searchingFor": "Searching for {{query}}"
   },
+  "voiceHelp": {
+    "title": "Voice Commands Help",
+    "description": "Use these voice commands to navigate and control the app. Click the microphone button and speak clearly.",
+    "navigation": "Navigation Commands",
+    "cart": "Cart Commands",
+    "checkout": "Checkout Commands",
+    "cartManagement": "Cart Management",
+    "search": "Search Commands",
+    "tips": "Tips for Better Recognition",
+    "tip1": "Speak clearly and at a normal pace",
+    "tip2": "Use the exact phrases shown for best results",
+    "tip3": "Make sure your microphone is enabled and working"
+  },
   "language": {
     "select": "Select Language",
     "current": "Current"
