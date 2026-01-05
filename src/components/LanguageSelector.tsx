@@ -12,7 +12,11 @@ import { Button } from "@/components/ui/button";
 
 const clearLegacyGoogleTranslateArtifacts = () => {
   // Clear cookie if a previous build set it
+<<<<<<< HEAD
   const expire = "Thu, 09 Jan 19 00:00:00 UTC";
+=======
+  const expire = "Thu, 01 Jan 1970 00:00:00 UTC";
+>>>>>>> d2166596444f38cf09f754a2ad1b6aa39fe8de2f
   document.cookie = `googtrans=; expires=${expire}; path=/;`;
   document.cookie = `googtrans=; expires=${expire}; path=/; domain=${window.location.hostname}`;
 
