@@ -89,7 +89,7 @@ const Analytics: React.FC = () => {
   const [activeTab, setActiveTab] = useState('powerbi');
 
   return (
-    <main className="min-h-screen bg-background pt-20">
+    <main className="min-h-screen bg-background pt-20 page-bg-pattern">
       {/* Header */}
       <section className="py-12 gradient-hero">
         <div className="container mx-auto px-4 text-center">
