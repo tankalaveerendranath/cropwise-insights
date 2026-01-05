@@ -24,7 +24,7 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background pt-20 page-bg-pattern">
+    <main className="min-h-screen bg-background pt-20">
       {/* Hero Section */}
       <section 
         ref={heroAnimation.ref}

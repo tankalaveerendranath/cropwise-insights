@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, BarChart3, ShoppingBag, Leaf, Sparkles } from 'lucide-react';
-import heroVideo from '@/assets/hero-video.mp4';
 import heroImage from '@/assets/hero-farm.jpg';
 import { useScrollY } from '@/hooks/use-parallax';
 
@@ -16,29 +15,18 @@ const Hero: React.FC = () => {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background Video with Parallax */}
+      {/* Background Image with Parallax */}
       <div 
         className="absolute inset-0 z-0 will-change-transform"
         style={{ 
           transform: `translateY(${parallaxOffset}px) scale(${1 + scrollY * 0.0002})`,
         }}
       >
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          poster={heroImage}
+        <img
+          src={heroImage}
+          alt="Modern agricultural field with technology overlay"
           className="w-full h-full object-cover"
-        >
-          <source src={heroVideo} type="video/mp4" />
-          {/* Fallback to image if video doesn't load */}
-          <img
-            src={heroImage}
-            alt="Modern agricultural field with technology overlay"
-            className="w-full h-full object-cover"
-          />
-        </video>
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/60 to-transparent" />
       </div>
 
