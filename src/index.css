@@ -1,4 +1,15 @@
 @tailwind base;
+
+/* Prevent Google Translate from affecting specific elements */
+.notranslate {
+  transform: none !important;
+}
+
+/* Ensure navbar stays in place */
+nav.notranslate,
+header.notranslate {
+  top: 44px !important;
+}
 @tailwind components;
 @tailwind utilities;
 

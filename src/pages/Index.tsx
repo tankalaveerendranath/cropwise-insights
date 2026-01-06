@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { 
   ArrowRight, BarChart3, ShoppingBag, Brain, Shield, Zap, Users, 
   Sprout, Droplets, Sun, Tractor, Leaf, TrendingUp, CloudRain,
-  Wheat, Globe, Target, Award, BookOpen, ChevronRight
+  Wheat, Globe, Target, Award, BookOpen, ChevronRight, Thermometer
 } from 'lucide-react';
 import { useScrollAnimation, useMultiScrollAnimation } from '@/hooks/use-scroll-animation';
 import { useParallax, useScrollY } from '@/hooks/use-parallax';
@@ -313,6 +313,137 @@ const Index: React.FC = () => {
                   ))}
                 </ul>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Crop Types Education */}
+        <div className="mt-16">
+          <h3 className="text-2xl font-bold text-foreground mb-8 text-center">
+            Major Crop Types & Their Requirements
+          </h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { 
+                name: 'Cereals', 
+                crops: 'Rice, Wheat, Maize, Millets',
+                season: 'Kharif & Rabi',
+                water: 'Moderate to High',
+                icon: Wheat,
+                color: 'bg-amber-500/10 text-amber-600'
+              },
+              { 
+                name: 'Pulses', 
+                crops: 'Chickpea, Lentils, Pigeon Pea',
+                season: 'Rabi Season',
+                water: 'Low to Moderate',
+                icon: Sprout,
+                color: 'bg-emerald-500/10 text-emerald-600'
+              },
+              { 
+                name: 'Cash Crops', 
+                crops: 'Cotton, Sugarcane, Jute',
+                season: 'Varies by crop',
+                water: 'High',
+                icon: TrendingUp,
+                color: 'bg-blue-500/10 text-blue-600'
+              },
+              { 
+                name: 'Oilseeds', 
+                crops: 'Groundnut, Mustard, Soybean',
+                season: 'Kharif & Rabi',
+                water: 'Low to Moderate',
+                icon: Sun,
+                color: 'bg-yellow-500/10 text-yellow-600'
+              },
+            ].map(({ name, crops, season, water, icon: Icon, color }) => (
+              <div key={name} className="bg-card rounded-xl p-6 border border-border hover:shadow-card transition-all duration-300 hover:-translate-y-1">
+                <div className={`w-12 h-12 rounded-xl ${color} flex items-center justify-center mb-4`}>
+                  <Icon className="w-6 h-6" />
+                </div>
+                <h4 className="text-lg font-semibold text-foreground mb-2">{name}</h4>
+                <p className="text-sm text-muted-foreground mb-3">{crops}</p>
+                <div className="space-y-1 text-xs">
+                  <p className="text-muted-foreground"><span className="font-medium">Season:</span> {season}</p>
+                  <p className="text-muted-foreground"><span className="font-medium">Water:</span> {water}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Seasonal Farming Tips */}
+        <div className="mt-16 bg-card rounded-2xl border border-border p-8">
+          <h3 className="text-2xl font-bold text-foreground mb-6 text-center">
+            Seasonal Farming Calendar
+          </h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="text-center p-6 bg-primary/5 rounded-xl">
+              <CloudRain className="w-10 h-10 text-primary mx-auto mb-3" />
+              <h4 className="font-semibold text-foreground mb-2">Kharif Season</h4>
+              <p className="text-sm text-muted-foreground mb-2">June - October</p>
+              <p className="text-xs text-muted-foreground">
+                Plant rice, maize, cotton, soybean. Prepare land before monsoon. Ensure proper drainage.
+              </p>
+            </div>
+            <div className="text-center p-6 bg-secondary/5 rounded-xl">
+              <Sun className="w-10 h-10 text-secondary mx-auto mb-3" />
+              <h4 className="font-semibold text-foreground mb-2">Rabi Season</h4>
+              <p className="text-sm text-muted-foreground mb-2">October - March</p>
+              <p className="text-xs text-muted-foreground">
+                Plant wheat, mustard, chickpea. Use residual soil moisture. Apply winter fertilizers.
+              </p>
+            </div>
+            <div className="text-center p-6 bg-success/5 rounded-xl">
+              <Thermometer className="w-10 h-10 text-success mx-auto mb-3" />
+              <h4 className="font-semibold text-foreground mb-2">Zaid Season</h4>
+              <p className="text-sm text-muted-foreground mb-2">March - June</p>
+              <p className="text-xs text-muted-foreground">
+                Plant watermelon, cucumber, vegetables. Requires irrigation. Focus on quick-maturing crops.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Sustainable Practices */}
+        <div className="mt-16">
+          <h3 className="text-2xl font-bold text-foreground mb-8 text-center">
+            Sustainable Farming Practices
+          </h3>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              {[
+                { title: 'Crop Rotation', desc: 'Alternate crops each season to maintain soil fertility and break pest cycles. Legumes after cereals replenish nitrogen.' },
+                { title: 'Organic Composting', desc: 'Convert farm waste into nutrient-rich compost. Reduces chemical fertilizer dependency and improves soil structure.' },
+                { title: 'Integrated Pest Management', desc: 'Combine biological controls, crop rotation, and minimal pesticides for sustainable pest control.' },
+              ].map(({ title, desc }) => (
+                <div key={title} className="flex items-start gap-4 p-4 bg-card rounded-xl border border-border">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-1">
+                    <Leaf className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">{title}</h4>
+                    <p className="text-sm text-muted-foreground">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="space-y-4">
+              {[
+                { title: 'Water Conservation', desc: 'Drip irrigation saves 30-50% water. Rainwater harvesting and mulching reduce evaporation losses.' },
+                { title: 'Cover Cropping', desc: 'Plant cover crops during off-season to prevent erosion, suppress weeds, and add organic matter.' },
+                { title: 'Agroforestry', desc: 'Integrate trees with crops for shade, windbreaks, and additional income from fruits or timber.' },
+              ].map(({ title, desc }) => (
+                <div key={title} className="flex items-start gap-4 p-4 bg-card rounded-xl border border-border">
+                  <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 mt-1">
+                    <Sprout className="w-4 h-4 text-secondary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">{title}</h4>
+                    <p className="text-sm text-muted-foreground">{desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

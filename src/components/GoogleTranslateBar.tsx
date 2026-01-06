@@ -61,9 +61,9 @@ const GoogleTranslateBar = () => {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[100] bg-card border-b border-border shadow-sm">
-      <div className="container mx-auto px-4 py-2 flex items-center justify-center min-h-[40px]">
-        <div id="google_translate_element" className="translate-widget" />
+    <div className="fixed top-0 left-0 right-0 z-[9999] bg-card/95 backdrop-blur-sm border-b border-border shadow-sm">
+      <div className="container mx-auto px-4 py-1.5 flex items-center justify-center min-h-[36px]">
+        <div id="google_translate_element" className="translate-widget notranslate" />
       </div>
     </div>
   );

@@ -109,7 +109,7 @@ const AppContent = () => {
       <GoogleTranslateBar />
       
       {/* Add padding to account for translate bar */}
-      <div className="pt-[48px]">
+      <div className="pt-[44px]">
         <Navbar isAuthenticated={!!user} onLogout={signOut} isAdmin={isAdmin} />
         <Routes>
           <Route path="/" element={<Index />} />
