@@ -47,6 +47,18 @@ const CropPrediction: React.FC = () => {
     }));
   };
 
+  // Deterministic hash function for consistent predictions
+  const hashInputs = (data: typeof formData): number => {
+    const str = `${data.state}-${data.soilType}-${data.temperature}-${data.humidity}-${data.rainfall}-${data.pH}-${data.nitrogen}-${data.phosphorus}-${data.potassium}`;
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash);
+  };
+
   const handlePredict = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -54,19 +66,30 @@ const CropPrediction: React.FC = () => {
     // Simulate AI prediction
     await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Generate mock prediction based on inputs
+    // Generate deterministic prediction based on inputs
+    const inputHash = hashInputs(formData);
     const cropIndex = Math.floor((formData.nitrogen + formData.phosphorus + formData.potassium) / 100) % crops.length;
     const selectedCrop = crops[cropIndex];
-    const baseYield = 2000 + (formData.rainfall * 5) + (formData.humidity * 10);
+    
+    // Deterministic yield based on all inputs
+    const baseYield = 2000 + (formData.rainfall * 5) + (formData.humidity * 10) + (formData.temperature * 8);
+    const yieldVariation = (inputHash % 500); // Deterministic variation based on hash
+    const predictedYield = Math.round(baseYield + yieldVariation);
+    
+    // Deterministic confidence based on input quality
+    const phFactor = Math.abs(formData.pH - 6.5) < 1 ? 10 : 0;
+    const nutrientFactor = (formData.nitrogen > 100 && formData.phosphorus > 30 && formData.potassium > 50) ? 10 : 0;
+    const confidence = Math.min(95, Math.round(75 + phFactor + nutrientFactor + (inputHash % 10)));
+    
+    // Market rates per quintal for different crops
     const marketRates: Record<string, number> = {
       Wheat: 2100, Rice: 2200, Maize: 1800, Cotton: 5500,
       Sugarcane: 350, Pulses: 5800, Millets: 2200, Soybean: 4500
     };
-
-    const predictedYield = Math.round(baseYield + Math.random() * 500);
-    const confidence = Math.round(75 + Math.random() * 20);
+    
     const marketRate = marketRates[selectedCrop] || 2000;
-    // Calculate price per hectare (yield in kg/ha * price per quintal / 100)
+    
+    // Calculate price per hectare deterministically (yield in kg/ha * price per quintal / 100)
     const pricePerHectare = Math.round((predictedYield / 100) * marketRate);
 
     const predictionResult = {
