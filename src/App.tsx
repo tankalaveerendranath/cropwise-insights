@@ -13,6 +13,7 @@ import Navbar from "@/components/Navbar";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import Chatbot from "@/components/Chatbot";
 import VoiceCommandsHelp from "@/components/VoiceCommandsHelp";
+import WeatherAlerts from "@/components/WeatherAlerts";
 import GoogleTranslateBar from "@/components/GoogleTranslateBar";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
@@ -166,6 +167,7 @@ const AppContent = () => {
         <VoiceAssistant />
         <Chatbot />
         <VoiceCommandsHelp />
+        <WeatherAlerts />
       </div>
     </>
   );
