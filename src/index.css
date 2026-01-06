@@ -1,14 +1,44 @@
 @tailwind base;
 
-/* Prevent Google Translate from affecting specific elements */
-.notranslate {
-  transform: none !important;
+/* Google Translate styling */
+.goog-te-banner-frame {
+  display: none !important;
 }
 
-/* Ensure navbar stays in place */
-nav.notranslate,
-header.notranslate {
-  top: 44px !important;
+body {
+  top: 0 !important;
+}
+
+.goog-te-gadget {
+  font-family: inherit !important;
+}
+
+.goog-te-gadget-simple {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.goog-te-gadget-simple .goog-te-menu-value {
+  color: hsl(var(--foreground)) !important;
+  font-size: 14px !important;
+}
+
+.goog-te-gadget-simple .goog-te-menu-value span {
+  color: hsl(var(--foreground)) !important;
+}
+
+.goog-te-menu-frame {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+}
+
+.translate-bar .goog-te-gadget {
+  margin: 0 !important;
+}
+
+/* Ensure translated content shows properly */
+.translated-ltr, .translated-rtl {
+  margin-top: 0 !important;
 }
 @tailwind components;
 @tailwind utilities;
