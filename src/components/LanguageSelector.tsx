@@ -10,34 +10,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-const clearLegacyGoogleTranslateArtifacts = () => {
-  // Clear cookie if a previous build set it
-  const expire = "Thu, 01 Jan 1970 00:00:00 UTC";
-  document.cookie = `googtrans=; expires=${expire}; path=/;`;
-  document.cookie = `googtrans=; expires=${expire}; path=/; domain=${window.location.hostname}`;
-
-  // Remove injected elements if they exist
-  document.getElementById("google_translate_element")?.remove();
-  document.getElementById("google-translate-script")?.remove();
-
-  // Remove banner iframes/tooltips (best-effort)
-  document
-    .querySelectorAll(
-      "iframe.goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame"
-    )
-    .forEach((el) => el.remove());
-
-  // Google translate sometimes offsets the body
-  document.body.style.top = "0px";
-};
-
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    clearLegacyGoogleTranslateArtifacts();
-  }, []);
 
   useEffect(() => {
     document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";

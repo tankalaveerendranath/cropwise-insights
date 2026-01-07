@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { X, CloudRain, Sun, Wind, Thermometer, Droplets, AlertTriangle, Sprout, Calendar, Bell } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { X, CloudRain, Sun, Wind, Thermometer, Droplets, AlertTriangle, Sprout, Calendar, Bell, MapPin, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface WeatherData {
   temperature: number;
@@ -9,6 +12,10 @@ interface WeatherData {
   condition: string;
   windSpeed: number;
   rainfall: number;
+  feelsLike?: number;
+  location?: string;
+  description?: string;
+  icon?: string;
 }
 
 interface Alert {
@@ -25,14 +32,78 @@ const WeatherAlerts: React.FC = () => {
   const [weather, setWeather] = useState<WeatherData>({
     temperature: 28,
     humidity: 65,
-    condition: 'Partly Cloudy',
+    condition: 'Loading...',
     windSpeed: 12,
     rainfall: 0,
   });
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [showNotification, setShowNotification] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [cityInput, setCityInput] = useState('');
+  const [currentCity, setCurrentCity] = useState('');
 
-  // Simulate weather data and generate alerts
+  const fetchWeather = useCallback(async (lat?: number, lon?: number, city?: string) => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('get-weather', {
+        body: { lat, lon, city },
+      });
+
+      if (error) {
+        console.error('Error fetching weather:', error);
+        toast.error('Failed to fetch weather data');
+        return;
+      }
+
+      if (data) {
+        setWeather({
+          temperature: data.temperature,
+          humidity: data.humidity,
+          condition: data.condition,
+          windSpeed: data.windSpeed,
+          rainfall: data.rainfall,
+          feelsLike: data.feelsLike,
+          location: data.location,
+          description: data.description,
+          icon: data.icon,
+        });
+        setCurrentCity(data.location || city || '');
+        
+        if (!data.fallback) {
+          toast.success(`Weather updated for ${data.location}`);
+        }
+      }
+    } catch (err) {
+      console.error('Weather fetch error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Get user location and fetch weather on mount
+  useEffect(() => {
+    const getLocationAndWeather = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            fetchWeather(position.coords.latitude, position.coords.longitude);
+          },
+          (error) => {
+            console.log('Geolocation error:', error);
+            // Default to major agricultural region
+            fetchWeather(undefined, undefined, 'Nagpur');
+          },
+          { timeout: 10000 }
+        );
+      } else {
+        fetchWeather(undefined, undefined, 'Nagpur');
+      }
+    };
+
+    getLocationAndWeather();
+  }, [fetchWeather]);
+
+  // Generate alerts based on weather
   useEffect(() => {
     const generateAlerts = () => {
       const currentMonth = new Date().getMonth();
@@ -40,7 +111,6 @@ const WeatherAlerts: React.FC = () => {
 
       // Seasonal recommendations
       if (currentMonth >= 5 && currentMonth <= 8) {
-        // June to September - Kharif season
         newAlerts.push({
           id: '1',
           type: 'planting',
@@ -50,7 +120,6 @@ const WeatherAlerts: React.FC = () => {
           priority: 'high',
         });
       } else if (currentMonth >= 9 && currentMonth <= 11) {
-        // October to December - Rabi sowing
         newAlerts.push({
           id: '2',
           type: 'planting',
@@ -60,7 +129,6 @@ const WeatherAlerts: React.FC = () => {
           priority: 'high',
         });
       } else if (currentMonth >= 2 && currentMonth <= 4) {
-        // March to May - Harvesting
         newAlerts.push({
           id: '3',
           type: 'harvesting',
@@ -77,7 +145,7 @@ const WeatherAlerts: React.FC = () => {
           id: '4',
           type: 'warning',
           title: 'Heat Wave Alert',
-          message: 'High temperatures expected. Increase irrigation frequency and apply mulching to protect crops.',
+          message: `Temperature is ${weather.temperature}°C. Increase irrigation frequency and apply mulching.`,
           priority: 'high',
         });
       }
@@ -87,24 +155,33 @@ const WeatherAlerts: React.FC = () => {
           id: '5',
           type: 'warning',
           title: 'High Humidity Warning',
-          message: 'Risk of fungal diseases. Apply preventive fungicides and ensure proper drainage.',
+          message: `Humidity at ${weather.humidity}%. Risk of fungal diseases. Apply preventive fungicides.`,
           priority: 'medium',
         });
       }
 
-      if (weather.rainfall > 50) {
+      if (weather.rainfall > 20) {
         newAlerts.push({
           id: '6',
           type: 'tip',
-          title: 'Heavy Rainfall Expected',
-          message: 'Delay fertilizer application. Ensure drainage channels are clear to prevent waterlogging.',
+          title: 'Rainfall Alert',
+          message: `${weather.rainfall}mm rainfall expected. Delay fertilizer application and ensure drainage.`,
           priority: 'medium',
         });
       }
 
-      // General tips
+      if (weather.windSpeed > 30) {
+        newAlerts.push({
+          id: '7',
+          type: 'warning',
+          title: 'High Wind Warning',
+          message: `Wind speed is ${weather.windSpeed} km/h. Secure greenhouse covers and support tall crops.`,
+          priority: 'medium',
+        });
+      }
+
       newAlerts.push({
-        id: '7',
+        id: '8',
         type: 'tip',
         title: 'Soil Testing Reminder',
         message: 'Regular soil testing helps optimize fertilizer use. Test before each major planting season.',
@@ -115,18 +192,23 @@ const WeatherAlerts: React.FC = () => {
     };
 
     generateAlerts();
+  }, [weather]);
 
-    // Simulate weather changes
-    const interval = setInterval(() => {
-      setWeather(prev => ({
-        ...prev,
-        temperature: prev.temperature + (Math.random() - 0.5) * 2,
-        humidity: Math.max(30, Math.min(95, prev.humidity + (Math.random() - 0.5) * 5)),
-      }));
-    }, 30000);
+  const handleCitySearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (cityInput.trim()) {
+      fetchWeather(undefined, undefined, cityInput.trim());
+      setCityInput('');
+    }
+  };
 
-    return () => clearInterval(interval);
-  }, [weather.temperature, weather.humidity, weather.rainfall]);
+  const handleRefresh = () => {
+    if (currentCity) {
+      fetchWeather(undefined, undefined, currentCity);
+    } else {
+      fetchWeather(undefined, undefined, 'Nagpur');
+    }
+  };
 
   const getAlertIcon = (type: Alert['type']) => {
     switch (type) {
@@ -206,6 +288,35 @@ const WeatherAlerts: React.FC = () => {
                   <p className="text-sm font-medium">{weather.condition}</p>
                 </div>
               </div>
+              {/* Location Search */}
+              <form onSubmit={handleCitySearch} className="flex gap-2 mt-4">
+                <div className="relative flex-1">
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-70" />
+                  <Input
+                    value={cityInput}
+                    onChange={(e) => setCityInput(e.target.value)}
+                    placeholder="Enter city name..."
+                    className="pl-9 bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50"
+                  />
+                </div>
+                <Button 
+                  type="button" 
+                  size="icon" 
+                  variant="ghost"
+                  onClick={handleRefresh}
+                  disabled={isLoading}
+                  className="text-primary-foreground hover:bg-primary-foreground/20"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                </Button>
+              </form>
+              {weather.location && (
+                <p className="text-xs text-primary-foreground/70 mt-2 flex items-center gap-1">
+                  <MapPin className="w-3 h-3" />
+                  Current: {weather.location}
+                  {weather.description && ` - ${weather.description}`}
+                </p>
+              )}
             </div>
 
             {/* Alerts List */}
