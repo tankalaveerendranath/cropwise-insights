@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { X, CloudRain, Sun, Wind, Thermometer, Droplets, AlertTriangle, Sprout, Calendar, Bell, MapPin, RefreshCw } from 'lucide-react';
+import { X, CloudRain, Sun, Wind, Thermometer, Droplets, AlertTriangle, Sprout, Calendar, Bell, MapPin, RefreshCw, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import WeatherHistoryChart from './WeatherHistoryChart';
 
 interface WeatherData {
   temperature: number;
@@ -27,6 +29,13 @@ interface Alert {
   priority: 'high' | 'medium' | 'low';
 }
 
+interface WeatherHistoryData {
+  date: string;
+  temperature: number;
+  rainfall: number;
+  humidity: number;
+}
+
 const WeatherAlerts: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [weather, setWeather] = useState<WeatherData>({
@@ -41,6 +50,7 @@ const WeatherAlerts: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [cityInput, setCityInput] = useState('');
   const [currentCity, setCurrentCity] = useState('');
+  const [weatherHistory, setWeatherHistory] = useState<WeatherHistoryData[]>([]);
 
   const fetchWeather = useCallback(async (lat?: number, lon?: number, city?: string) => {
     setIsLoading(true);
@@ -79,6 +89,37 @@ const WeatherAlerts: React.FC = () => {
       setIsLoading(false);
     }
   }, []);
+
+  // Generate weather history (simulated for past 30 days)
+  useEffect(() => {
+    const generateHistory = () => {
+      const history: WeatherHistoryData[] = [];
+      const today = new Date();
+      
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        
+        // Simulate historical data with some variation
+        const baseTemp = weather.temperature + (Math.random() - 0.5) * 10;
+        const baseRainfall = Math.random() * 30;
+        const baseHumidity = weather.humidity + (Math.random() - 0.5) * 20;
+        
+        history.push({
+          date: `${date.getMonth() + 1}/${date.getDate()}`,
+          temperature: Math.round(baseTemp * 10) / 10,
+          rainfall: Math.round(baseRainfall * 10) / 10,
+          humidity: Math.round(Math.max(30, Math.min(95, baseHumidity))),
+        });
+      }
+      
+      setWeatherHistory(history);
+    };
+
+    if (weather.temperature && weather.humidity) {
+      generateHistory();
+    }
+  }, [weather.temperature, weather.humidity]);
 
   // Get user location and fetch weather on mount
   useEffect(() => {
@@ -319,46 +360,67 @@ const WeatherAlerts: React.FC = () => {
               )}
             </div>
 
-            {/* Alerts List */}
-            <div className="p-4 overflow-y-auto max-h-[50vh]">
-              <h3 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
-                Farming Recommendations
-              </h3>
-              <div className="space-y-3">
-                {alerts.map(alert => (
-                  <div
-                    key={alert.id}
-                    className={`p-4 rounded-lg border-l-4 ${getPriorityColor(alert.priority)}`}
-                  >
-                    <div className="flex items-start gap-3">
-                      {getAlertIcon(alert.type)}
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-foreground text-sm">{alert.title}</h4>
-                        <p className="text-xs text-muted-foreground mt-1">{alert.message}</p>
-                        {alert.crop && (
-                          <p className="text-xs text-primary mt-2 font-medium">
-                            <Sprout className="w-3 h-3 inline mr-1" />
-                            {alert.crop}
-                          </p>
-                        )}
+            {/* Tabs for Alerts and History */}
+            <div className="p-4">
+              <Tabs defaultValue="alerts" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="alerts">
+                    <AlertTriangle className="w-4 h-4 mr-2" />
+                    Alerts
+                  </TabsTrigger>
+                  <TabsTrigger value="history">
+                    <TrendingUp className="w-4 h-4 mr-2" />
+                    30-Day History
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Alerts Tab */}
+                <TabsContent value="alerts" className="overflow-y-auto max-h-[50vh] mt-4">
+                  <h3 className="text-sm font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
+                    Farming Recommendations
+                  </h3>
+                  <div className="space-y-3">
+                    {alerts.map(alert => (
+                      <div
+                        key={alert.id}
+                        className={`p-4 rounded-lg border-l-4 ${getPriorityColor(alert.priority)}`}
+                      >
+                        <div className="flex items-start gap-3">
+                          {getAlertIcon(alert.type)}
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-foreground text-sm">{alert.title}</h4>
+                            <p className="text-xs text-muted-foreground mt-1">{alert.message}</p>
+                            {alert.crop && (
+                              <p className="text-xs text-primary mt-2 font-medium">
+                                <Sprout className="w-3 h-3 inline mr-1" />
+                                {alert.crop}
+                              </p>
+                            )}
+                          </div>
+                        </div>
                       </div>
+                    ))}
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className="mt-6 pt-4 border-t border-border">
+                    <h4 className="text-sm font-semibold text-muted-foreground mb-3">Quick Actions</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button variant="outline" size="sm" className="text-xs" asChild>
+                        <a href="/predict">Get Crop Prediction</a>
+                      </Button>
+                      <Button variant="outline" size="sm" className="text-xs" asChild>
+                        <a href="/shop">Shop Farm Supplies</a>
+                      </Button>
                     </div>
                   </div>
-                ))}
-              </div>
+                </TabsContent>
 
-              {/* Quick Actions */}
-              <div className="mt-6 pt-4 border-t border-border">
-                <h4 className="text-sm font-semibold text-muted-foreground mb-3">Quick Actions</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline" size="sm" className="text-xs" asChild>
-                    <a href="/predict">Get Crop Prediction</a>
-                  </Button>
-                  <Button variant="outline" size="sm" className="text-xs" asChild>
-                    <a href="/shop">Shop Farm Supplies</a>
-                  </Button>
-                </div>
-              </div>
+                {/* History Tab */}
+                <TabsContent value="history" className="overflow-y-auto max-h-[50vh] mt-4">
+                  <WeatherHistoryChart data={weatherHistory} />
+                </TabsContent>
+              </Tabs>
             </div>
           </Card>
         </div>
