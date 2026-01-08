@@ -25,6 +25,41 @@ const LanguageSelector = () => {
     // Ensure detector cache is updated consistently
     localStorage.setItem("i18nextLng", code);
     await i18n.changeLanguage(code);
+    
+    // Trigger Google Translate to change language
+    const googleTranslateCombo = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+    if (googleTranslateCombo) {
+      // Map i18next language codes to Google Translate codes
+      const langMap: Record<string, string> = {
+        'zh': 'zh-CN',
+        'en': 'en',
+        'hi': 'hi',
+        'te': 'te',
+        'es': 'es',
+        'fr': 'fr',
+        'ar': 'ar',
+        'pt': 'pt',
+        'de': 'de',
+        'ja': 'ja',
+        'ru': 'ru',
+        'ko': 'ko',
+        'it': 'it',
+        'th': 'th',
+        'vi': 'vi',
+        'nl': 'nl',
+        'tr': 'tr',
+        'pl': 'pl',
+        'id': 'id',
+        'ms': 'ms',
+        'uk': 'uk',
+        'sv': 'sv'
+      };
+      
+      const googleLangCode = langMap[code] || code;
+      googleTranslateCombo.value = googleLangCode;
+      googleTranslateCombo.dispatchEvent(new Event('change'));
+    }
+    
     setIsOpen(false);
   };
 
