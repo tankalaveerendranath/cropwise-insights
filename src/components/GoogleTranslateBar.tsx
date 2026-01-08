@@ -23,11 +23,11 @@ declare global {
       };
     };
     googleTranslateElementInit?: () => void;
+    triggerGoogleTranslate?: (langCode: string) => void;
   }
 }
 
 const GoogleTranslateBar = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
@@ -42,14 +42,21 @@ const GoogleTranslateBar = () => {
       document.body.style.position = 'static';
     };
 
+    // Global function to trigger translation from LanguageSelector
+    window.triggerGoogleTranslate = (langCode: string) => {
+      const googleTranslateCombo = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+      if (googleTranslateCombo) {
+        googleTranslateCombo.value = langCode;
+        googleTranslateCombo.dispatchEvent(new Event('change'));
+      }
+    };
+
     // Initialize Google Translate Widget
     const initTranslate = () => {
-      console.log('Initializing Google Translate...');
-      
       if (window.google?.translate?.TranslateElement) {
         const container = document.getElementById('google_translate_element');
         if (container) {
-          container.innerHTML = ''; // Clear any existing content
+          container.innerHTML = '';
           
           try {
             new window.google.translate.TranslateElement(
@@ -61,8 +68,6 @@ const GoogleTranslateBar = () => {
               },
               'google_translate_element'
             );
-            console.log('Google Translate initialized successfully');
-            setIsLoaded(true);
             
             // Remove banner after initialization
             setTimeout(removeBanner, 100);
@@ -71,7 +76,6 @@ const GoogleTranslateBar = () => {
           }
         }
       } else if (retryCount < 5) {
-        // Retry if Google Translate hasn't loaded yet
         setTimeout(() => {
           setRetryCount(prev => prev + 1);
         }, 500);
@@ -86,7 +90,6 @@ const GoogleTranslateBar = () => {
       const existingScript = document.getElementById('google-translate-script');
       
       if (existingScript) {
-        // Script already exists, try to initialize
         if (window.google?.translate) {
           initTranslate();
         }
@@ -98,16 +101,10 @@ const GoogleTranslateBar = () => {
       script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
       script.async = true;
       script.defer = true;
-      script.onerror = () => {
-        console.error('Failed to load Google Translate script');
-        setIsLoaded(false);
-      };
       
       document.head.appendChild(script);
-      console.log('Google Translate script added to page');
     };
 
-    // Wait for DOM to be fully ready
     if (document.readyState === 'complete') {
       loadScript();
     } else {
@@ -127,15 +124,13 @@ const GoogleTranslateBar = () => {
     };
   }, [retryCount]);
 
+  // Hidden container - Google Translate widget is loaded but not visible
   return (
-    <div className="fixed top-0 left-0 right-0 z-[9999] bg-card/95 backdrop-blur-sm border-b border-border shadow-sm">
-      <div className="container mx-auto px-4 py-1.5 flex items-center justify-center min-h-[36px]">
-        <div id="google_translate_element" />
-        {!isLoaded && (
-          <span className="text-xs text-muted-foreground">Loading translator...</span>
-        )}
-      </div>
-    </div>
+    <div 
+      id="google_translate_element" 
+      className="fixed -top-[9999px] -left-[9999px] opacity-0 pointer-events-none"
+      aria-hidden="true"
+    />
   );
 };
 

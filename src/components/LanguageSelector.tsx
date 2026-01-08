@@ -10,6 +10,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
+declare global {
+  interface Window {
+    triggerGoogleTranslate?: (langCode: string) => void;
+  }
+}
+
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -21,43 +27,41 @@ const LanguageSelector = () => {
   const currentLang =
     languages.find((l) => l.code === i18n.language) ?? languages[0];
 
+  // Map i18next language codes to Google Translate codes
+  const langMap: Record<string, string> = {
+    'zh': 'zh-CN',
+    'en': 'en',
+    'hi': 'hi',
+    'te': 'te',
+    'es': 'es',
+    'fr': 'fr',
+    'ar': 'ar',
+    'pt': 'pt',
+    'de': 'de',
+    'ja': 'ja',
+    'ru': 'ru',
+    'ko': 'ko',
+    'it': 'it',
+    'th': 'th',
+    'vi': 'vi',
+    'nl': 'nl',
+    'tr': 'tr',
+    'pl': 'pl',
+    'id': 'id',
+    'ms': 'ms',
+    'uk': 'uk',
+    'sv': 'sv'
+  };
+
   const changeLanguage = async (code: string) => {
-    // Ensure detector cache is updated consistently
+    // Update i18next language
     localStorage.setItem("i18nextLng", code);
     await i18n.changeLanguage(code);
     
-    // Trigger Google Translate to change language
-    const googleTranslateCombo = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-    if (googleTranslateCombo) {
-      // Map i18next language codes to Google Translate codes
-      const langMap: Record<string, string> = {
-        'zh': 'zh-CN',
-        'en': 'en',
-        'hi': 'hi',
-        'te': 'te',
-        'es': 'es',
-        'fr': 'fr',
-        'ar': 'ar',
-        'pt': 'pt',
-        'de': 'de',
-        'ja': 'ja',
-        'ru': 'ru',
-        'ko': 'ko',
-        'it': 'it',
-        'th': 'th',
-        'vi': 'vi',
-        'nl': 'nl',
-        'tr': 'tr',
-        'pl': 'pl',
-        'id': 'id',
-        'ms': 'ms',
-        'uk': 'uk',
-        'sv': 'sv'
-      };
-      
-      const googleLangCode = langMap[code] || code;
-      googleTranslateCombo.value = googleLangCode;
-      googleTranslateCombo.dispatchEvent(new Event('change'));
+    // Trigger Google Translate via the global function
+    const googleLangCode = langMap[code] || code;
+    if (window.triggerGoogleTranslate) {
+      window.triggerGoogleTranslate(googleLangCode);
     }
     
     setIsOpen(false);
