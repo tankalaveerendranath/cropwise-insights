@@ -31,6 +31,8 @@ const GoogleTranslateBar = () => {
   const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
+    const STORAGE_KEY = 'googleTranslateLang';
+
     // Remove banner frame that blocks content
     const removeBanner = () => {
       const banner = document.querySelector('.goog-te-banner-frame.skiptranslate');
@@ -42,13 +44,24 @@ const GoogleTranslateBar = () => {
       document.body.style.position = 'static';
     };
 
-    // Global function to trigger translation from LanguageSelector
-    window.triggerGoogleTranslate = (langCode: string) => {
+    const applyLangToCombo = (langCode: string) => {
       const googleTranslateCombo = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-      if (googleTranslateCombo) {
-        googleTranslateCombo.value = langCode;
-        googleTranslateCombo.dispatchEvent(new Event('change'));
+      if (!googleTranslateCombo) return false;
+
+      googleTranslateCombo.value = langCode;
+      googleTranslateCombo.dispatchEvent(new Event('change'));
+      return true;
+    };
+
+    // Global function to trigger translation from LanguageSelector / route changes
+    window.triggerGoogleTranslate = (langCode: string) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, langCode);
+      } catch {
+        // ignore
       }
+
+      applyLangToCombo(langCode);
     };
 
     // Initialize Google Translate Widget
@@ -57,27 +70,43 @@ const GoogleTranslateBar = () => {
         const container = document.getElementById('google_translate_element');
         if (container) {
           container.innerHTML = '';
-          
+
           try {
             new window.google.translate.TranslateElement(
               {
                 pageLanguage: 'en',
-                includedLanguages: 'en,hi,te,es,fr,zh-CN,ar,pt,de,ja,ru,ko,it,th,vi,nl,tr,pl,id,ms,uk,sv',
+                includedLanguages:
+                  'en,hi,te,es,fr,zh-CN,ar,pt,de,ja,ru,ko,it,th,vi,nl,tr,pl,id,ms,uk,sv',
                 layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
                 autoDisplay: false,
               },
               'google_translate_element'
             );
-            
+
             // Remove banner after initialization
             setTimeout(removeBanner, 100);
+
+            // Apply last selected language (important for first load + SPA routes)
+            let desiredLang: string | null = null;
+            try {
+              desiredLang = localStorage.getItem(STORAGE_KEY);
+            } catch {
+              desiredLang = null;
+            }
+
+            if (desiredLang) {
+              // Give the widget a moment to inject the combo
+              setTimeout(() => {
+                window.triggerGoogleTranslate?.(desiredLang!);
+              }, 250);
+            }
           } catch (error) {
             console.error('Error initializing Google Translate:', error);
           }
         }
       } else if (retryCount < 5) {
         setTimeout(() => {
-          setRetryCount(prev => prev + 1);
+          setRetryCount((prev) => prev + 1);
         }, 500);
       }
     };

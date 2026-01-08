@@ -8,13 +8,14 @@ import { ThemeProvider } from "next-themes";
 import { useTranslation } from "react-i18next";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import '@/i18n';
+import "@/i18n";
 import Navbar from "@/components/Navbar";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import Chatbot from "@/components/Chatbot";
 import VoiceCommandsHelp from "@/components/VoiceCommandsHelp";
 import WeatherAlerts from "@/components/WeatherAlerts";
 import GoogleTranslateBar from "@/components/GoogleTranslateBar";
+import useGoogleTranslateSync from "@/hooks/use-google-translate-sync";
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import CropPrediction from "./pages/CropPrediction";
@@ -100,9 +101,10 @@ const useLanguagePersistence = () => {
 
 const AppContent = () => {
   const { user, signOut, isAdmin } = useAuth();
-  
+
   useRTLSupport();
   useLanguagePersistence();
+  useGoogleTranslateSync();
 
   return (
     <>
