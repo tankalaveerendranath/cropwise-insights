@@ -106,11 +106,10 @@ const AppContent = () => {
 
   return (
     <>
-      {/* Google Translate Bar - Fixed at top */}
+      {/* Hidden Google Translate Widget - triggered from LanguageSelector */}
       <GoogleTranslateBar />
       
-      {/* Add padding to account for translate bar */}
-      <div className="pt-[44px]">
+      <div>
         <Navbar isAuthenticated={!!user} onLogout={signOut} isAdmin={isAdmin} />
         <Routes>
           <Route path="/" element={<Index />} />
