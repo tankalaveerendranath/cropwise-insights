@@ -79,7 +79,7 @@ const AuthPage: React.FC = () => {
         }
         
         toast.success('Account created successfully!');
-        navigate('/');
+        // Navigation is handled by useEffect when user state updates
       } else {
         const result = loginSchema.safeParse(formData);
         if (!result.success) {
@@ -106,7 +106,7 @@ const AuthPage: React.FC = () => {
         }
         
         toast.success('Welcome back!');
-        navigate('/');
+        // Navigation is handled by useEffect when user state updates
       }
     } catch (error) {
       toast.error('Something went wrong. Please try again.');
